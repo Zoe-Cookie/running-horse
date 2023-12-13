@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.29.30152.0	    12/13/23 11:02:00
+Microsoft (R) Macro Assembler Version 14.29.30152.0	    12/13/23 11:27:54
 main.asm						     Page 1 - 1
 
 
@@ -53,85 +53,28 @@ main.asm						     Page 1 - 1
  00000162 006E 0001		curPos COORD <110,1>
  00000166 0000			role_up_Y WORD ?
 
-				;小馬身體
- 00000168  00000006 [		layer1 BYTE 6 DUP('+'), '+', '+', '+', '+'
-	    2B
-	   ] 2B 2B 2B 2B
- 00000172  00000006 [		layer2 BYTE 6 DUP('+'), 3 DUP('+'), '+'
-	    2B
-	   ]
-	   00000003 [
-	    2B
-	   ] 2B
- 0000017C  00000005 [		layer3 BYTE 5 DUP('+'), 4 DUP('+'), '+'
-	    2B
-	   ]
-	   00000004 [
-	    2B
-	   ] 2B
- 00000186  00000005 [		layer4 BYTE 5 DUP('+'), 5 DUP('+')
-	    2B
-	   ]
-	   00000005 [
-	    2B
-	   ]
- 00000190 2B			layer5 BYTE '+', 4 DUP('+'), 3 DUP('+'), 2 DUP('+')
-	   00000004 [
-	    2B
-	   ]
-	   00000003 [
-	    2B
-	   ]
-	   00000002 [
-	    2B
-	   ]
- 0000019A  00000008 [		layer6 BYTE 8 DUP('+'), 2 DUP('+')
-	    2B
-	   ]
-	   00000002 [
-	    2B
-	   ]
- 000001A4  00000002 [		layer7 BYTE 2 DUP('+'), 7 DUP('+'), '+'
-	    2B
-	   ]
-	   00000007 [
-	    2B
-	   ] 2B
- 000001AE  00000002 [		layer8 BYTE 2 DUP('+'), '+', 3 DUP('+'), '+', '+', '+', '+'
-	    2B
-	   ] 2B
-	   00000003 [
-	    2B
-	   ] 2B 2B 2B 2B
- 000001B8  00000002 [		layer9 BYTE 2 DUP('+'), '+', 3 DUP('+'), '+', '++'
-	    2B
-	   ] 2B
-	   00000003 [
-	    2B
-	   ] 2B 2B 2B
-
 				;小馬顏色
- 000001C1  00000006 [		attribute1 WORD 6 DUP(0h), 66h, 0h, 66h, 0h
+ 00000168  00000006 [		attribute1 WORD 6 DUP(0h), 66h, 0h, 66h, 0h
 	    0000
 	   ] 0066 0000
 	   0066 0000
- 000001D5  00000006 [		attribute2 WORD 6 DUP(0h), 66h, 2 DUP(88h), 0h
+ 0000017C  00000006 [		attribute2 WORD 6 DUP(0h), 66h, 2 DUP(88h), 0h
 	    0000
 	   ] 0066
 	   00000002 [
 	    0088
 	   ] 0000
- 000001E9  00000005 [		attribute3 WORD 5 DUP(0h), 88h, 11h, 66h, 11h, 0h
+ 00000190  00000005 [		attribute3 WORD 5 DUP(0h), 88h, 11h, 66h, 11h, 0h
 	    0000
 	   ] 0088 0011
 	   0066 0011 0000
- 000001FD  00000005 [		attribute4 WORD 5 DUP(0h), 66h, 4 DUP(66h)
+ 000001A4  00000005 [		attribute4 WORD 5 DUP(0h), 66h, 4 DUP(66h)
 	    0000
 	   ] 0066
 	   00000004 [
 	    0066
 	   ]
- 00000211 0088			attribute5 WORD 88h, 4 DUP(0h), 88h,  2 DUP(66h), 2 DUP(0h)
+ 000001B8 0088			attribute5 WORD 88h, 4 DUP(0h), 88h,  2 DUP(66h), 2 DUP(0h)
 	   00000004 [
 	    0000
 	   ] 0088
@@ -141,7 +84,7 @@ main.asm						     Page 1 - 1
 	   00000002 [
 	    0000
 	   ]
- 00000225  00000002 [		attribute6 WORD 2 DUP(88h), 6 DUP(66h), 2 DUP(0h)
+ 000001CC  00000002 [		attribute6 WORD 2 DUP(88h), 6 DUP(66h), 2 DUP(0h)
 	    0088
 	   ]
 	   00000006 [
@@ -150,25 +93,28 @@ main.asm						     Page 1 - 1
 	   00000002 [
 	    0000
 	   ]
- 00000239  00000002 [		attribute7 WORD 2 DUP(0h), 7 DUP(66h), 0h
+ 000001E0  00000002 [		attribute7 WORD 2 DUP(0h), 7 DUP(66h), 0h
 	    0000
 	   ]
 	   00000007 [
 	    0066
 	   ] 0000
- 0000024D  00000002 [		attribute8 WORD 2 DUP(0h), 66h, 3 DUP(0h), 66h, 0h, 77h, 0h
+ 000001F4  00000002 [		attribute8 WORD 2 DUP(0h), 66h, 3 DUP(0h), 66h, 0h, 77h, 0h
 	    0000
 	   ] 0066
 	   00000003 [
 	    0000
 	   ] 0066 0000
 	   0077 0000
- 00000261  00000002 [		attribute9 WORD 2 DUP(0h), 77h, 3 DUP(0h), 77h, 0h
+ 00000208  00000002 [		attribute9 WORD 2 DUP(0h), 77h, 3 DUP(0h), 77h, 3 DUP(0h)
 	    0000
 	   ] 0077
 	   00000003 [
 	    0000
-	   ] 0077 0000
+	   ] 0077
+	   00000003 [
+	    0000
+	   ]
 
  00000000			.code
  00000000			main PROC
@@ -185,13 +131,13 @@ main.asm						     Page 1 - 1
 						INVOKE WriteConsoleOutputAttribute, 
 							outHandle, 
 							ADDR attribute&num, 
-							sizeof attribute&num, 
+							10, 
 							rolePos, 
 							ADDR cellsWritten
 						INVOKE WriteConsoleOutputCharacter, 
 							outHandle, 
-							ADDR layer&num, 
-							sizeof layer&num, 
+							ADDR buffer, 
+							10, 
 							rolePos, 
 							ADDR cellsWritten
 						inc rolePos.Y
@@ -249,8 +195,8 @@ main.asm						     Page 1 - 1
 					;用ReadKey可以不用等待讀取輸入，但輸入不限於空白鍵
  000002CB  E8 00000000 E		call ReadKey
  000002D0  74 0A			jz   nokeyPressed      ; no key pressed
- 000002D2  E8 00000108			call role_up
- 000002D7  E8 00000103			call role_up
+ 000002D2  E8 0000010D			call role_up
+ 000002D7  E8 00000108			call role_up
  000002DC			nokeyPressed:
 					;印出分數
 					INVOKE getScore
@@ -259,7 +205,8 @@ main.asm						     Page 1 - 1
 					;如果角色跳起來，就讓他往下 
 					;若現在Y座標小於18(不知道為什麼是18)，呼叫role_down
 					.IF rolePos.Y < 10
- 000002F6  E8 000005BB				call role_down
+ 000002F6  E8 00000578				call role_down
+ 000002FB  E8 00000573				call role_down
 						
 					.ENDIF
 					;draw obstacle with color blue
@@ -277,7 +224,7 @@ main.asm						     Page 1 - 1
 							obsPos, 
 							ADDR cellsWritten
 					;back to previous position to erase previous obstacle
- 00000335  66| FF 05			inc obsPos.X		
+ 0000033A  66| FF 05			inc obsPos.X		
 	   00000010 R
 					;erase obstacle 
 					INVOKE WriteConsoleOutputAttribute, 
@@ -294,217 +241,217 @@ main.asm						     Page 1 - 1
 							obsPos, 
 							ADDR cellsWritten
 					;to the next position
- 00000376  66| 83 2D			sub obsPos.X, 2
+ 0000037B  66| 83 2D			sub obsPos.X, 2
 	   00000010 R 02
- 0000037E  66| A1			mov ax,rolePos.x
+ 00000383  66| A1			mov ax,rolePos.x
 	   00000008 R
 					;if obstacle and role in the same position, stop moving
 					.IF obsPos.X == ax
- 0000038D  EB 05				jmp END_PLAY
+ 00000392  EB 05				jmp END_PLAY
 					.ENDIF
- 0000038F  E9 FFFFFF37			jmp PLAY
- 00000394			END_PLAY:
+ 00000394  E9 FFFFFF32			jmp PLAY
+ 00000399			END_PLAY:
 					exit
- 0000039B			main ENDP
+ 000003A0			main ENDP
 
- 0000039B			getScore PROC, 
+ 000003A0			getScore PROC, 
 					;用經過的milliseconds當作分數
-	;讓數字從相同地方印出
+					;讓數字從相同地方印出
 					INVOKE SetConsoleCursorPosition, 
 							outHandle, 
 							curPos
 					INVOKE GetTickCount ; get new tick count
- 000003B1  3B 05 0000015E R		cmp eax,startTime	; lower than starting one
- 000003B7  72 19			jb errorTime
- 000003B9  2B 05 0000015E R		sub eax,startTime	; get elapsed milliseconds
+ 000003B6  3B 05 0000015E R		cmp eax,startTime	; lower than starting one
+ 000003BC  72 19			jb errorTime
+ 000003BE  2B 05 0000015E R		sub eax,startTime	; get elapsed milliseconds
 					;除以16讓數字增加幅度變小
- 000003BF  BA 00000000			mov edx, 0h			
- 000003C4  B9 00000010			mov ecx, 10h
- 000003C9  F7 F1			div ecx
- 000003CB  E8 00000000 E		call WriteDec ; display it
- 000003D0  EB 0C			jmp quit
- 000003D2			errorTime:
+ 000003C4  BA 00000000			mov edx, 0h			
+ 000003C9  B9 00000010			mov ecx, 10h
+ 000003CE  F7 F1			div ecx
+ 000003D0  E8 00000000 E		call WriteDec ; display it
+ 000003D5  EB 0C			jmp quit
+ 000003D7			errorTime:
 					mWrite "Reach Highest Goal!"
- 00000271		     1		.data		
- 00000271 52 65 61 63 68     1		??0000 BYTE "Reach Highest Goal!",0	
+ 0000021C		     1		.data		
+ 0000021C 52 65 61 63 68     1		??0000 BYTE "Reach Highest Goal!",0	
 	   20 48 69 67 68
 	   65 73 74 20 47
 	   6F 61 6C 21 00
- 000003D2		     1		.code
- 000003D2  52		     1		push	edx
- 000003D3  BA 00000271 R     1		mov	edx,OFFSET ??0000
- 000003D8  E8 00000000 E     1		call	WriteString
- 000003DD  5A		     1		pop	edx
- 000003DE			quit:
- 000003DE  C3				ret
- 000003DF			getScore ENDP
+ 000003D7		     1		.code
+ 000003D7  52		     1		push	edx
+ 000003D8  BA 0000021C R     1		mov	edx,OFFSET ??0000
+ 000003DD  E8 00000000 E     1		call	WriteString
+ 000003E2  5A		     1		pop	edx
+ 000003E3			quit:
+ 000003E3  C3				ret
+ 000003E4			getScore ENDP
 
- 000003DF			role_up PROC
+ 000003E4			role_up PROC
 				;向上一格
 					;erase old position
 					FORC num, <123456789>
 						INVOKE WriteConsoleOutputAttribute, 
 							outHandle, 
 							0h, 
-							attribute&num, 
+							10, 
 							rolePos, 
 							ADDR cellsWritten
 						INVOKE WriteConsoleOutputCharacter, 
 							outHandle, 
-							ADDR layer&num, 
-							sizeof layer&num, 
+							ADDR buffer, 
+							10, 
 							rolePos, 
 							ADDR cellsWritten
 						inc rolePos.Y
 					ENDM
- 0000041E  66| FF 05	     1			inc rolePos.Y
+ 0000041B  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000464  66| FF 05	     1			inc rolePos.Y
+ 00000459  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000004AA  66| FF 05	     1			inc rolePos.Y
+ 00000497  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000004F0  66| FF 05	     1			inc rolePos.Y
+ 000004D5  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000536  66| FF 05	     1			inc rolePos.Y
+ 00000513  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000057C  66| FF 05	     1			inc rolePos.Y
+ 00000551  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000005C2  66| FF 05	     1			inc rolePos.Y
+ 0000058F  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000608  66| FF 05	     1			inc rolePos.Y
+ 000005CD  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000064E  66| FF 05	     1			inc rolePos.Y
+ 0000060B  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
 
 					;draw a new one
- 00000655  66| 83 2D			sub rolePos.Y, 9
+ 00000612  66| 83 2D			sub rolePos.Y, 9
 	   0000000A R 09
- 0000065D  66| FF 0D			dec rolePos.Y
+ 0000061A  66| FF 0D			dec rolePos.Y
 	   0000000A R
 
 					FORC num, <123456789>
 						INVOKE WriteConsoleOutputAttribute, 
 							outHandle, 
 							ADDR attribute&num, 
-							sizeof attribute&num, 
+							10, 
 							rolePos, 
 							ADDR cellsWritten
 						INVOKE WriteConsoleOutputCharacter, 
 							outHandle, 
-							ADDR layer&num, 
-							sizeof layer&num, 
+							ADDR buffer, 
+							10, 
 							rolePos, 
 							ADDR cellsWritten
 						inc rolePos.Y
 					ENDM
- 0000069E  66| FF 05	     1			inc rolePos.Y
+ 0000065B  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000006DF  66| FF 05	     1			inc rolePos.Y
+ 0000069C  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000720  66| FF 05	     1			inc rolePos.Y
+ 000006DD  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000761  66| FF 05	     1			inc rolePos.Y
+ 0000071E  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000007A2  66| FF 05	     1			inc rolePos.Y
+ 0000075F  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000007E3  66| FF 05	     1			inc rolePos.Y
+ 000007A0  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000824  66| FF 05	     1			inc rolePos.Y
+ 000007E1  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000865  66| FF 05	     1			inc rolePos.Y
+ 00000822  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000008A6  66| FF 05	     1			inc rolePos.Y
+ 00000863  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
 
- 000008AD  66| 83 2D			sub rolePos.Y, 9
+ 0000086A  66| 83 2D			sub rolePos.Y, 9
 	   0000000A R 09
- 000008B5  C3				ret
- 000008B6			role_up ENDP
+ 00000872  C3				ret
+ 00000873			role_up ENDP
 
- 000008B6			role_down PROC
+ 00000873			role_down PROC
 				;向下一格
 					;erase old position
 					FORC num, <123456789>
 						INVOKE WriteConsoleOutputAttribute, 
 							outHandle, 
 							0h, 
-							attribute&num, 
+							10, 
 							rolePos, 
 							ADDR cellsWritten
 						INVOKE WriteConsoleOutputCharacter, 
 							outHandle, 
-							ADDR layer&num, 
-							sizeof layer&num, 
+							ADDR buffer, 
+							10, 
 							rolePos, 
 							ADDR cellsWritten
 						inc rolePos.Y
 					ENDM
- 000008F5  66| FF 05	     1			inc rolePos.Y
+ 000008AA  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000093B  66| FF 05	     1			inc rolePos.Y
+ 000008E8  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000981  66| FF 05	     1			inc rolePos.Y
+ 00000926  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000009C7  66| FF 05	     1			inc rolePos.Y
+ 00000964  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000A0D  66| FF 05	     1			inc rolePos.Y
+ 000009A2  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000A53  66| FF 05	     1			inc rolePos.Y
+ 000009E0  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000A99  66| FF 05	     1			inc rolePos.Y
+ 00000A1E  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000ADF  66| FF 05	     1			inc rolePos.Y
+ 00000A5C  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000B25  66| FF 05	     1			inc rolePos.Y
+ 00000A9A  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
 
 					;draw a new one
- 00000B2C  66| 83 2D			sub rolePos.Y, 9
+ 00000AA1  66| 83 2D			sub rolePos.Y, 9
 	   0000000A R 09
- 00000B34  66| FF 05			inc rolePos.Y
+ 00000AA9  66| FF 05			inc rolePos.Y
 	   0000000A R
 
 					FORC num, <123456789>
 						INVOKE WriteConsoleOutputAttribute, 
 							outHandle, 
 							ADDR attribute&num, 
-							sizeof attribute&num, 
+							10, 
 							rolePos, 
 							ADDR cellsWritten
 						INVOKE WriteConsoleOutputCharacter, 
 							outHandle, 
-							ADDR layer&num, 
-							sizeof layer&num, 
+							ADDR buffer, 
+							10, 
 							rolePos, 
 							ADDR cellsWritten
 						inc rolePos.Y
 					ENDM
- 00000B75  66| FF 05	     1			inc rolePos.Y
+ 00000AEA  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000BB6  66| FF 05	     1			inc rolePos.Y
+ 00000B2B  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000BF7  66| FF 05	     1			inc rolePos.Y
+ 00000B6C  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000C38  66| FF 05	     1			inc rolePos.Y
+ 00000BAD  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000C79  66| FF 05	     1			inc rolePos.Y
+ 00000BEE  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000CBA  66| FF 05	     1			inc rolePos.Y
+ 00000C2F  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000CFB  66| FF 05	     1			inc rolePos.Y
+ 00000C70  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000D3C  66| FF 05	     1			inc rolePos.Y
+ 00000CB1  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000D7D  66| FF 05	     1			inc rolePos.Y
+ 00000CF2  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
 
- 00000D84  66| 83 2D			sub rolePos.Y, 9
+ 00000CF9  66| 83 2D			sub rolePos.Y, 9
 	   0000000A R 09
- 00000D8C  C3				ret
- 00000D8D			role_down ENDP
+ 00000D01  C3				ret
+ 00000D02			role_down ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.29.30152.0	    12/13/23 11:02:00
+Microsoft (R) Macro Assembler Version 14.29.30152.0	    12/13/23 11:27:54
 main.asm						     Symbols 2 - 1
 
 
@@ -616,8 +563,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000285 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00000D8D Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000230 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000D02 Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -724,16 +671,16 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-getScore . . . . . . . . . . . .	P Near	 0000039B _TEXT	Length= 00000044 Public STDCALL
-  errorTime  . . . . . . . . . .	L Near	 000003D2 _TEXT	
-  quit . . . . . . . . . . . . .	L Near	 000003DE _TEXT	
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000039B Public STDCALL
+getScore . . . . . . . . . . . .	P Near	 000003A0 _TEXT	Length= 00000044 Public STDCALL
+  errorTime  . . . . . . . . . .	L Near	 000003D7 _TEXT	
+  quit . . . . . . . . . . . . .	L Near	 000003E3 _TEXT	
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000003A0 Public STDCALL
   PLAY . . . . . . . . . . . . .	L Near	 000002CB _TEXT	
   nokeyPressed . . . . . . . . .	L Near	 000002DC _TEXT	
-  END_PLAY . . . . . . . . . . .	L Near	 00000394 _TEXT	
+  END_PLAY . . . . . . . . . . .	L Near	 00000399 _TEXT	
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
-role_down  . . . . . . . . . . .	P Near	 000008B6 _TEXT	Length= 000004D7 Public STDCALL
-role_up  . . . . . . . . . . . .	P Near	 000003DF _TEXT	Length= 000004D7 Public STDCALL
+role_down  . . . . . . . . . . .	P Near	 00000873 _TEXT	Length= 0000048F Public STDCALL
+role_up  . . . . . . . . . . . .	P Near	 000003E4 _TEXT	Length= 0000048F Public STDCALL
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 
@@ -742,7 +689,7 @@ Symbols:
 
                 N a m e                 Type     Value    Attr
 
-??0000 . . . . . . . . . . . . .	Byte	 00000271 _DATA	
+??0000 . . . . . . . . . . . . .	Byte	 0000021C _DATA	
 @CodeSize  . . . . . . . . . . .	Number	 00000000h   
 @DataSize  . . . . . . . . . . .	Number	 00000000h   
 @Interface . . . . . . . . . . .	Number	 00000003h   
@@ -953,15 +900,15 @@ VK_UP  . . . . . . . . . . . . .	Number	 00000026h
 WINDOW_BUFFER_SIZE_EVENT . . . .	Number	 00000004h   
 WriteConsoleOutputCharacter  . .	Text   	 WriteConsoleOutputCharacterA
 WriteConsole . . . . . . . . . .	Text   	 WriteConsoleA
-attribute1 . . . . . . . . . . .	Word	 000001C1 _DATA	
-attribute2 . . . . . . . . . . .	Word	 000001D5 _DATA	
-attribute3 . . . . . . . . . . .	Word	 000001E9 _DATA	
-attribute4 . . . . . . . . . . .	Word	 000001FD _DATA	
-attribute5 . . . . . . . . . . .	Word	 00000211 _DATA	
-attribute6 . . . . . . . . . . .	Word	 00000225 _DATA	
-attribute7 . . . . . . . . . . .	Word	 00000239 _DATA	
-attribute8 . . . . . . . . . . .	Word	 0000024D _DATA	
-attribute9 . . . . . . . . . . .	Word	 00000261 _DATA	
+attribute1 . . . . . . . . . . .	Word	 00000168 _DATA	
+attribute2 . . . . . . . . . . .	Word	 0000017C _DATA	
+attribute3 . . . . . . . . . . .	Word	 00000190 _DATA	
+attribute4 . . . . . . . . . . .	Word	 000001A4 _DATA	
+attribute5 . . . . . . . . . . .	Word	 000001B8 _DATA	
+attribute6 . . . . . . . . . . .	Word	 000001CC _DATA	
+attribute7 . . . . . . . . . . .	Word	 000001E0 _DATA	
+attribute8 . . . . . . . . . . .	Word	 000001F4 _DATA	
+attribute9 . . . . . . . . . . .	Word	 00000208 _DATA	
 attributes . . . . . . . . . . .	Word	 0000007C _DATA	
 black  . . . . . . . . . . . . .	Number	 00000000h   
 blue . . . . . . . . . . . . . .	Number	 00000001h   
@@ -975,15 +922,6 @@ exit . . . . . . . . . . . . . .	Text   	 INVOKE ExitProcess,0
 gray . . . . . . . . . . . . . .	Number	 00000008h   
 green  . . . . . . . . . . . . .	Number	 00000002h   
 groundPos  . . . . . . . . . . .	COORD	 0000000C _DATA	
-layer1 . . . . . . . . . . . . .	Byte	 00000168 _DATA	
-layer2 . . . . . . . . . . . . .	Byte	 00000172 _DATA	
-layer3 . . . . . . . . . . . . .	Byte	 0000017C _DATA	
-layer4 . . . . . . . . . . . . .	Byte	 00000186 _DATA	
-layer5 . . . . . . . . . . . . .	Byte	 00000190 _DATA	
-layer6 . . . . . . . . . . . . .	Byte	 0000019A _DATA	
-layer7 . . . . . . . . . . . . .	Byte	 000001A4 _DATA	
-layer8 . . . . . . . . . . . . .	Byte	 000001AE _DATA	
-layer9 . . . . . . . . . . . . .	Byte	 000001B8 _DATA	
 lightBlue  . . . . . . . . . . .	Number	 00000009h   
 lightCyan  . . . . . . . . . . .	Number	 0000000Bh   
 lightGray  . . . . . . . . . . .	Number	 00000007h   

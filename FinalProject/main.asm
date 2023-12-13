@@ -21,17 +21,6 @@ startTime DWORD ?   ;
 curPos COORD <110,1>
 role_up_Y WORD ?
 
-;小馬身體
-layer1 BYTE 6 DUP('+'), '+', '+', '+', '+'
-layer2 BYTE 6 DUP('+'), 3 DUP('+'), '+'
-layer3 BYTE 5 DUP('+'), 4 DUP('+'), '+'
-layer4 BYTE 5 DUP('+'), 5 DUP('+')
-layer5 BYTE '+', 4 DUP('+'), 3 DUP('+'), 2 DUP('+')
-layer6 BYTE 8 DUP('+'), 2 DUP('+')
-layer7 BYTE 2 DUP('+'), 7 DUP('+'), '+'
-layer8 BYTE 2 DUP('+'), '+', 3 DUP('+'), '+', '+', '+', '+'
-layer9 BYTE 2 DUP('+'), '+', 3 DUP('+'), '+', '++'
-
 ;小馬顏色
 attribute1 WORD 6 DUP(0h), 66h, 0h, 66h, 0h
 attribute2 WORD 6 DUP(0h), 66h, 2 DUP(88h), 0h
@@ -41,7 +30,7 @@ attribute5 WORD 88h, 4 DUP(0h), 88h,  2 DUP(66h), 2 DUP(0h)
 attribute6 WORD 2 DUP(88h), 6 DUP(66h), 2 DUP(0h)
 attribute7 WORD 2 DUP(0h), 7 DUP(66h), 0h
 attribute8 WORD 2 DUP(0h), 66h, 3 DUP(0h), 66h, 0h, 77h, 0h
-attribute9 WORD 2 DUP(0h), 77h, 3 DUP(0h), 77h, 0h
+attribute9 WORD 2 DUP(0h), 77h, 3 DUP(0h), 77h, 3 DUP(0h)
 
 .code
 main PROC
@@ -58,13 +47,13 @@ main PROC
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
 			ADDR attribute&num, 
-			sizeof attribute&num, 
+			10, 
 			rolePos, 
 			ADDR cellsWritten
 		INVOKE WriteConsoleOutputCharacter, 
 			outHandle, 
-			ADDR layer&num, 
-			sizeof layer&num, 
+			ADDR buffer, 
+			10, 
 			rolePos, 
 			ADDR cellsWritten
 		inc rolePos.Y
@@ -113,6 +102,7 @@ nokeyPressed:
 	;如果角色跳起來，就讓他往下 
 	;若現在Y座標小於18(不知道為什麼是18)，呼叫role_down
 	.IF rolePos.Y < 10
+		call role_down
 		call role_down
 		
 	.ENDIF
@@ -187,13 +177,13 @@ role_up PROC
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
 			0h, 
-			attribute&num, 
+			10, 
 			rolePos, 
 			ADDR cellsWritten
 		INVOKE WriteConsoleOutputCharacter, 
 			outHandle, 
-			ADDR layer&num, 
-			sizeof layer&num, 
+			ADDR buffer, 
+			10, 
 			rolePos, 
 			ADDR cellsWritten
 		inc rolePos.Y
@@ -207,13 +197,13 @@ role_up PROC
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
 			ADDR attribute&num, 
-			sizeof attribute&num, 
+			10, 
 			rolePos, 
 			ADDR cellsWritten
 		INVOKE WriteConsoleOutputCharacter, 
 			outHandle, 
-			ADDR layer&num, 
-			sizeof layer&num, 
+			ADDR buffer, 
+			10, 
 			rolePos, 
 			ADDR cellsWritten
 		inc rolePos.Y
@@ -230,13 +220,13 @@ role_down PROC
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
 			0h, 
-			attribute&num, 
+			10, 
 			rolePos, 
 			ADDR cellsWritten
 		INVOKE WriteConsoleOutputCharacter, 
 			outHandle, 
-			ADDR layer&num, 
-			sizeof layer&num, 
+			ADDR buffer, 
+			10, 
 			rolePos, 
 			ADDR cellsWritten
 		inc rolePos.Y
@@ -250,13 +240,13 @@ role_down PROC
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
 			ADDR attribute&num, 
-			sizeof attribute&num, 
+			10, 
 			rolePos, 
 			ADDR cellsWritten
 		INVOKE WriteConsoleOutputCharacter, 
 			outHandle, 
-			ADDR layer&num, 
-			sizeof layer&num, 
+			ADDR buffer, 
+			10, 
 			rolePos, 
 			ADDR cellsWritten
 		inc rolePos.Y
