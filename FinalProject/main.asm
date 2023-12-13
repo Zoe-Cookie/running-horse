@@ -138,10 +138,14 @@ nokeyPressed:
 			ADDR cellsWritten
 	;to the next position
 	sub obsPos.X, 2
-	mov ax,rolePos.x
+	mov ax,rolePos.X
 	;if obstacle and role in the same position, stop moving
 	.IF obsPos.X == ax
-		jmp END_PLAY
+		mov ax,rolePos.Y
+		add ax, 8
+		.IF obsPos.Y == ax
+			jmp END_PLAY
+		.ENDIF
 	.ENDIF
 	jmp PLAY
 END_PLAY:
