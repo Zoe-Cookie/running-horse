@@ -9,17 +9,17 @@ role_down PROTO
 Ground = 100 ;the length of ground
 outHandle HANDLE ?
 cellsWritten DWORD ?
-rolePos COORD <11,10>   ;initialize position of role
-groundPos COORD <11,19> ;initialize position of ground
-obsPos COORD <110,18>	;initialize position of obstacle
-obsBound COORD <11,18>
+rolePos COORD <11,16>   ;initialize position of role
+groundPos COORD <11,25> ;initialize position of ground
+obsPos COORD <110,24>	;initialize position of obstacle
+obsBound COORD <11,24>
 buffer BYTE Ground DUP(44h)							;character types
 attributes WORD 0Eh, 0h, Ground DUP(22h), 11h		;colors
 titleStr BYTE "小馬快快跑",0
 drawDelay DWORD 150	;to draw obstacle with a delay
 startTime DWORD ?   ;
 curPos COORD <110,1>
-role_up_Y WORD ?
+role_up_Y = 16
 
 ;小馬顏色
 attribute1 WORD 6 DUP(0h), 66h, 0h, 66h, 0h
@@ -101,7 +101,7 @@ nokeyPressed:
 	INVOKE Sleep, drawDelay		
 	;如果角色跳起來，就讓他往下 
 	;若現在Y座標小於18(不知道為什麼是18)，呼叫role_down
-	.IF rolePos.Y < 10
+	.IF rolePos.Y < role_up_Y
 		call role_down
 		call role_down
 		
