@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.29.30152.0	    12/13/23 11:55:20
+Microsoft (R) Macro Assembler Version 14.29.30152.0	    12/18/23 13:09:02
 main.asm						     Page 1 - 1
 
 
@@ -28,6 +28,7 @@ main.asm						     Page 1 - 1
 				getScore PROTO
 				role_up PROTO		
 				role_down PROTO
+				move_obstacle PROTO
 
  00000000			.data
  = 00000064			Ground = 100 ;the length of ground
@@ -51,7 +52,7 @@ main.asm						     Page 1 - 1
  0000015A 00000096		drawDelay DWORD 150	;to draw obstacle with a delay
  0000015E 00000000		startTime DWORD ?   ;
  00000162 006E 0001		curPos COORD <110,1>
- = 00000010			role_up_Y = 16
+ = 00000010			role_up_Y = 16		;用於判斷有沒有跳起來
 
 				;小馬顏色
  00000166  00000006 [		attribute1 WORD 6 DUP(0h), 66h, 0h, 66h, 0h
@@ -114,6 +115,21 @@ main.asm						     Page 1 - 1
 	   ] 0077
 	   00000003 [
 	    0000
+	   ]
+				;覆蓋小馬顏色
+ 0000021A  0000000A [		attribute_black WORD 10 DUP(0h)
+	    0000
+	   ]
+
+				;障礙物顏色
+ 0000022E  00000003 [		attributeA WORD 3 DUP(44h)
+	    0044
+	   ]
+ 00000234  00000003 [		attributeB WORD 3 DUP(44h)
+	    0044
+	   ]
+ 0000023A  00000003 [		attributeC WORD 3 DUP(44h)
+	    0044
 	   ]
 
  00000000			.code
@@ -194,110 +210,81 @@ main.asm						     Page 1 - 1
  000002CB			PLAY:
 					;用ReadKey可以不用等待讀取輸入，但輸入不限於空白鍵
  000002CB  E8 00000000 E		call ReadKey
- 000002D0  74 0A			jz   nokeyPressed      ; no key pressed
- 000002D2  E8 00000120			call role_up
- 000002D7  E8 0000011B			call role_up
- 000002DC			nokeyPressed:
+ 000002D0  74 0F			jz   nokeyPressed      ; no key pressed
+					;不可連續跳兩下
+					.IF rolePos.Y == 16
+ 000002DC  E8 00000077				call role_up
+					.ENDIF
+
+
+ 000002E1			nokeyPressed:
 					;印出分數
 					INVOKE getScore
 					;use delay to let obstacle look moving
 					INVOKE Sleep, drawDelay		
 					;如果角色跳起來，就讓他往下 
-					;若現在Y座標小於18(不知道為什麼是18)，呼叫role_down
+					;若現在Y座標小於一開始的位置，呼叫role_down
 					.IF rolePos.Y < role_up_Y
- 000002F6  E8 0000058B				call role_down
- 000002FB  E8 00000586				call role_down
-						
+ 000002FB  E8 00000502				call role_down
+
+
 					.ENDIF
-					;draw obstacle with color blue
-					INVOKE WriteConsoleOutputAttribute, 
-							outHandle, 
-							ADDR attributes+204, 
-							1, 
-							obsPos, 
-							ADDR cellsWritten
-					; Write character codes to "D"
-					INVOKE WriteConsoleOutputCharacter, 
-							outHandle, 
-							ADDR buffer, 
-							1, 
-							obsPos, 
-							ADDR cellsWritten
-					;back to previous position to erase previous obstacle
- 0000033A  66| FF 05			inc obsPos.X		
-	   00000010 R
-					;erase obstacle 
-					INVOKE WriteConsoleOutputAttribute, 
-							outHandle, 
-							ADDR attributes+2, 
-							1, 
-							obsPos, 
-							ADDR cellsWritten
-					; Write character codes to "D"
-					INVOKE WriteConsoleOutputCharacter, 
-							outHandle, 
-							ADDR buffer, 
-							1, 
-							obsPos, 
-							ADDR cellsWritten
-					;to the next position
- 0000037B  66| 83 2D			sub obsPos.X, 2
-	   00000010 R 02
- 00000383  66| A1			mov ax,rolePos.X
+
+ 00000300  E8 000009A7			call move_obstacle
+
+ 00000305  66| A1			mov ax,rolePos.x
 	   00000008 R
 					;if obstacle and role in the same position, stop moving
-					.IF obsPos.X == ax
- 00000392  66| A1				mov ax,rolePos.Y
-	   0000000A R
- 00000398  66| 83 C0 08				add ax, 8
-						.IF obsPos.Y == ax
- 000003A5  EB 05					jmp END_PLAY
-						.ENDIF
-					.ENDIF
- 000003A7  E9 FFFFFF1F			jmp PLAY
- 000003AC			END_PLAY:
-					exit
- 000003B3			main ENDP
+					;.IF obsPos.X == ax
+					;	jmp END_PLAY
+					;.ENDIF
 
- 000003B3			getScore PROC, 
+					;無限輪迴
+					
+ 0000030B  EB BE			jmp PLAY
+ 0000030D			END_PLAY:
+					exit
+ 00000314			main ENDP
+
+ 00000314			getScore PROC, 
 					;用經過的milliseconds當作分數
 					;讓數字從相同地方印出
 					INVOKE SetConsoleCursorPosition, 
 							outHandle, 
 							curPos
 					INVOKE GetTickCount ; get new tick count
- 000003C9  3B 05 0000015E R		cmp eax,startTime	; lower than starting one
- 000003CF  72 19			jb errorTime
- 000003D1  2B 05 0000015E R		sub eax,startTime	; get elapsed milliseconds
+ 0000032A  3B 05 0000015E R		cmp eax,startTime	; lower than starting one
+ 00000330  72 19			jb errorTime
+ 00000332  2B 05 0000015E R		sub eax,startTime	; get elapsed milliseconds
 					;除以16讓數字增加幅度變小
- 000003D7  BA 00000000			mov edx, 0h			
- 000003DC  B9 00000010			mov ecx, 10h
- 000003E1  F7 F1			div ecx
- 000003E3  E8 00000000 E		call WriteDec ; display it
- 000003E8  EB 0C			jmp quit
- 000003EA			errorTime:
+ 00000338  BA 00000000			mov edx, 0h			
+ 0000033D  B9 00000010			mov ecx, 10h
+ 00000342  F7 F1			div ecx
+ 00000344  E8 00000000 E		call WriteDec ; display it
+ 00000349  EB 0C			jmp quit
+ 0000034B			errorTime:
 					mWrite "Reach Highest Goal!"
- 0000021A		     1		.data		
- 0000021A 52 65 61 63 68     1		??0000 BYTE "Reach Highest Goal!",0	
+ 00000240		     1		.data		
+ 00000240 52 65 61 63 68     1		??0000 BYTE "Reach Highest Goal!",0	
 	   20 48 69 67 68
 	   65 73 74 20 47
 	   6F 61 6C 21 00
- 000003EA		     1		.code
- 000003EA  52		     1		push	edx
- 000003EB  BA 0000021A R     1		mov	edx,OFFSET ??0000
- 000003F0  E8 00000000 E     1		call	WriteString
- 000003F5  5A		     1		pop	edx
- 000003F6			quit:
- 000003F6  C3				ret
- 000003F7			getScore ENDP
+ 0000034B		     1		.code
+ 0000034B  52		     1		push	edx
+ 0000034C  BA 00000240 R     1		mov	edx,OFFSET ??0000
+ 00000351  E8 00000000 E     1		call	WriteString
+ 00000356  5A		     1		pop	edx
+ 00000357			quit:
+ 00000357  C3				ret
+ 00000358			getScore ENDP
 
- 000003F7			role_up PROC
-				;向上一格
+ 00000358			role_up PROC
+				;向上一格半多
 					;erase old position
 					FORC num, <123456789>
 						INVOKE WriteConsoleOutputAttribute, 
 							outHandle, 
-							0h, 
+							ADDR attribute_black, 
 							10, 
 							rolePos, 
 							ADDR cellsWritten
@@ -309,29 +296,29 @@ main.asm						     Page 1 - 1
 							ADDR cellsWritten
 						inc rolePos.Y
 					ENDM
- 0000042E  66| FF 05	     1			inc rolePos.Y
+ 00000392  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000046C  66| FF 05	     1			inc rolePos.Y
+ 000003D3  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000004AA  66| FF 05	     1			inc rolePos.Y
+ 00000414  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000004E8  66| FF 05	     1			inc rolePos.Y
+ 00000455  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000526  66| FF 05	     1			inc rolePos.Y
+ 00000496  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000564  66| FF 05	     1			inc rolePos.Y
+ 000004D7  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000005A2  66| FF 05	     1			inc rolePos.Y
+ 00000518  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000005E0  66| FF 05	     1			inc rolePos.Y
+ 00000559  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000061E  66| FF 05	     1			inc rolePos.Y
+ 0000059A  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
 
 					;draw a new one
- 00000625  66| 83 2D			sub rolePos.Y, 9
-	   0000000A R 09
- 0000062D  66| FF 0D			dec rolePos.Y
+ 000005A1  66| 83 2D			sub rolePos.Y, 15
+	   0000000A R 0F
+ 000005A9  66| FF 0D			dec rolePos.Y
 	   0000000A R
 
 					FORC num, <123456789>
@@ -349,37 +336,37 @@ main.asm						     Page 1 - 1
 							ADDR cellsWritten
 						inc rolePos.Y
 					ENDM
- 0000066E  66| FF 05	     1			inc rolePos.Y
+ 000005EA  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000006AF  66| FF 05	     1			inc rolePos.Y
+ 0000062B  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000006F0  66| FF 05	     1			inc rolePos.Y
+ 0000066C  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000731  66| FF 05	     1			inc rolePos.Y
+ 000006AD  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000772  66| FF 05	     1			inc rolePos.Y
+ 000006EE  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000007B3  66| FF 05	     1			inc rolePos.Y
+ 0000072F  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000007F4  66| FF 05	     1			inc rolePos.Y
+ 00000770  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000835  66| FF 05	     1			inc rolePos.Y
+ 000007B1  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000876  66| FF 05	     1			inc rolePos.Y
+ 000007F2  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
 
- 0000087D  66| 83 2D			sub rolePos.Y, 9
+ 000007F9  66| 83 2D			sub rolePos.Y, 9
 	   0000000A R 09
- 00000885  C3				ret
- 00000886			role_up ENDP
+ 00000801  C3				ret
+ 00000802			role_up ENDP
 
- 00000886			role_down PROC
+ 00000802			role_down PROC
 				;向下一格
 					;erase old position
 					FORC num, <123456789>
 						INVOKE WriteConsoleOutputAttribute, 
 							outHandle, 
-							0h, 
+							ADDR attribute_black, 
 							10, 
 							rolePos, 
 							ADDR cellsWritten
@@ -391,29 +378,29 @@ main.asm						     Page 1 - 1
 							ADDR cellsWritten
 						inc rolePos.Y
 					ENDM
- 000008BD  66| FF 05	     1			inc rolePos.Y
+ 0000083C  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000008FB  66| FF 05	     1			inc rolePos.Y
+ 0000087D  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000939  66| FF 05	     1			inc rolePos.Y
+ 000008BE  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000977  66| FF 05	     1			inc rolePos.Y
+ 000008FF  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000009B5  66| FF 05	     1			inc rolePos.Y
+ 00000940  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000009F3  66| FF 05	     1			inc rolePos.Y
+ 00000981  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000A31  66| FF 05	     1			inc rolePos.Y
+ 000009C2  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000A6F  66| FF 05	     1			inc rolePos.Y
+ 00000A03  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000AAD  66| FF 05	     1			inc rolePos.Y
+ 00000A44  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
 
 					;draw a new one
- 00000AB4  66| 83 2D			sub rolePos.Y, 9
+ 00000A4B  66| 83 2D			sub rolePos.Y, 9
 	   0000000A R 09
- 00000ABC  66| FF 05			inc rolePos.Y
+ 00000A53  66| FF 05			inc rolePos.Y
 	   0000000A R
 
 					FORC num, <123456789>
@@ -431,32 +418,121 @@ main.asm						     Page 1 - 1
 							ADDR cellsWritten
 						inc rolePos.Y
 					ENDM
- 00000AFD  66| FF 05	     1			inc rolePos.Y
+ 00000A94  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000B3E  66| FF 05	     1			inc rolePos.Y
+ 00000AD5  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000B7F  66| FF 05	     1			inc rolePos.Y
+ 00000B16  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000BC0  66| FF 05	     1			inc rolePos.Y
+ 00000B57  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000C01  66| FF 05	     1			inc rolePos.Y
+ 00000B98  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000C42  66| FF 05	     1			inc rolePos.Y
+ 00000BD9  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000C83  66| FF 05	     1			inc rolePos.Y
+ 00000C1A  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000CC4  66| FF 05	     1			inc rolePos.Y
+ 00000C5B  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000D05  66| FF 05	     1			inc rolePos.Y
+ 00000C9C  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
 
- 00000D0C  66| 83 2D			sub rolePos.Y, 9
+ 00000CA3  66| 83 2D			sub rolePos.Y, 9
 	   0000000A R 09
- 00000D14  C3				ret
- 00000D15			role_down ENDP
+ 00000CAB  C3				ret
+ 00000CAC			role_down ENDP
+
+ 00000CAC			move_obstacle PROC
+					;draw obstacle with color red
+					FORC num, <ABC>
+						INVOKE WriteConsoleOutputAttribute, 
+							outHandle, 
+							ADDR attribute&num, 
+							3, 
+							obsPos, 
+							ADDR cellsWritten
+						INVOKE WriteConsoleOutputCharacter, 
+							outHandle, 
+							ADDR buffer, 
+							3, 
+							obsPos, 
+							ADDR cellsWritten
+						dec obsPos.Y			;每次畫一列，往上畫
+					ENDM
+ 00000CE6  66| FF 0D	     1			dec obsPos.Y			;每次畫一列，往上畫
+	   00000012 R
+ 00000D27  66| FF 0D	     1			dec obsPos.Y			;每次畫一列，往上畫
+	   00000012 R
+ 00000D68  66| FF 0D	     1			dec obsPos.Y			;每次畫一列，往上畫
+	   00000012 R
+					;back to previous position Y回到第一列，X倒退三行
+ 00000D6F  66| 83 05			add obsPos.X, 3
+	   00000010 R 03
+ 00000D77  66| 83 05			add obsPos.Y, 3
+	   00000012 R 03
+					;erase obstacle 
+					FORC num, <ABC>
+						INVOKE WriteConsoleOutputAttribute, 
+							outHandle, 
+							ADDR attribute_black, 
+							3, 
+							obsPos, 
+							ADDR cellsWritten
+						INVOKE WriteConsoleOutputCharacter, 
+							outHandle, 
+							ADDR buffer, 
+							3, 
+							obsPos, 
+							ADDR cellsWritten
+						dec obsPos.Y
+					ENDM
+ 00000DB9  66| FF 0D	     1			dec obsPos.Y
+	   00000012 R
+ 00000DFA  66| FF 0D	     1			dec obsPos.Y
+	   00000012 R
+ 00000E3B  66| FF 0D	     1			dec obsPos.Y
+	   00000012 R
+					;to the next position Y回到第一列，X前進六行
+ 00000E42  66| 83 2D			sub obsPos.X, 6
+	   00000010 R 06
+ 00000E4A  66| 83 05			add obsPos.Y, 3
+	   00000012 R 03
+					;若障礙物到達末端，從頭開始
+					.IF obsPos.X == 5
+ 00000E60  66| 83 05				add obsPos.X, 3
+	   00000010 R 03
+						FORC num, <ABC>
+						INVOKE WriteConsoleOutputAttribute, 
+							outHandle, 
+							ADDR attribute_black, 
+							3, 
+							obsPos, 
+							ADDR cellsWritten
+						INVOKE WriteConsoleOutputCharacter, 
+							outHandle, 
+							ADDR buffer, 
+							3, 
+							obsPos, 
+							ADDR cellsWritten
+						dec obsPos.Y
+					ENDM
+ 00000EA2  66| FF 0D	     1			dec obsPos.Y
+	   00000012 R
+ 00000EE3  66| FF 0D	     1			dec obsPos.Y
+	   00000012 R
+ 00000F24  66| FF 0D	     1			dec obsPos.Y
+	   00000012 R
+ 00000F2B  66| C7 05			mov obsPos.X, 110 
+	   00000010 R
+	   006E
+ 00000F34  66| 83 05			add obsPos.Y, 3
+	   00000012 R 03
+					.ENDIF
+ 00000F3C  C3				ret
+ 00000F3D			move_obstacle ENDP
 
 				END main
-Microsoft (R) Macro Assembler Version 14.29.30152.0	    12/13/23 11:55:20
+Microsoft (R) Macro Assembler Version 14.29.30152.0	    12/18/23 13:09:02
 main.asm						     Symbols 2 - 1
 
 
@@ -568,8 +644,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 0000022E Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00000D15 Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000254 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000F3D Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -676,16 +752,17 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-getScore . . . . . . . . . . . .	P Near	 000003B3 _TEXT	Length= 00000044 Public STDCALL
-  errorTime  . . . . . . . . . .	L Near	 000003EA _TEXT	
-  quit . . . . . . . . . . . . .	L Near	 000003F6 _TEXT	
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 000003B3 Public STDCALL
+getScore . . . . . . . . . . . .	P Near	 00000314 _TEXT	Length= 00000044 Public STDCALL
+  errorTime  . . . . . . . . . .	L Near	 0000034B _TEXT	
+  quit . . . . . . . . . . . . .	L Near	 00000357 _TEXT	
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000314 Public STDCALL
   PLAY . . . . . . . . . . . . .	L Near	 000002CB _TEXT	
-  nokeyPressed . . . . . . . . .	L Near	 000002DC _TEXT	
-  END_PLAY . . . . . . . . . . .	L Near	 000003AC _TEXT	
+  nokeyPressed . . . . . . . . .	L Near	 000002E1 _TEXT	
+  END_PLAY . . . . . . . . . . .	L Near	 0000030D _TEXT	
+move_obstacle  . . . . . . . . .	P Near	 00000CAC _TEXT	Length= 00000291 Public STDCALL
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
-role_down  . . . . . . . . . . .	P Near	 00000886 _TEXT	Length= 0000048F Public STDCALL
-role_up  . . . . . . . . . . . .	P Near	 000003F7 _TEXT	Length= 0000048F Public STDCALL
+role_down  . . . . . . . . . . .	P Near	 00000802 _TEXT	Length= 000004AA Public STDCALL
+role_up  . . . . . . . . . . . .	P Near	 00000358 _TEXT	Length= 000004AA Public STDCALL
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 
@@ -694,7 +771,7 @@ Symbols:
 
                 N a m e                 Type     Value    Attr
 
-??0000 . . . . . . . . . . . . .	Byte	 0000021A _DATA	
+??0000 . . . . . . . . . . . . .	Byte	 00000240 _DATA	
 @CodeSize  . . . . . . . . . . .	Number	 00000000h   
 @DataSize  . . . . . . . . . . .	Number	 00000000h   
 @Interface . . . . . . . . . . .	Number	 00000003h   
@@ -914,6 +991,10 @@ attribute6 . . . . . . . . . . .	Word	 000001CA _DATA
 attribute7 . . . . . . . . . . .	Word	 000001DE _DATA	
 attribute8 . . . . . . . . . . .	Word	 000001F2 _DATA	
 attribute9 . . . . . . . . . . .	Word	 00000206 _DATA	
+attributeA . . . . . . . . . . .	Word	 0000022E _DATA	
+attributeB . . . . . . . . . . .	Word	 00000234 _DATA	
+attributeC . . . . . . . . . . .	Word	 0000023A _DATA	
+attribute_black  . . . . . . . .	Word	 0000021A _DATA	
 attributes . . . . . . . . . . .	Word	 0000007C _DATA	
 black  . . . . . . . . . . . . .	Number	 00000000h   
 blue . . . . . . . . . . . . . .	Number	 00000001h   

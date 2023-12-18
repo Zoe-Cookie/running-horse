@@ -4,6 +4,7 @@ INCLUDE macros.inc
 getScore PROTO
 role_up PROTO		
 role_down PROTO
+move_obstacle PROTO
 
 .data
 Ground = 100 ;the length of ground
@@ -19,7 +20,7 @@ titleStr BYTE "小馬快快跑",0
 drawDelay DWORD 150	;to draw obstacle with a delay
 startTime DWORD ?   ;
 curPos COORD <110,1>
-role_up_Y = 16
+role_up_Y = 16		;用於判斷有沒有跳起來
 
 ;小馬顏色
 attribute1 WORD 6 DUP(0h), 66h, 0h, 66h, 0h
@@ -31,6 +32,13 @@ attribute6 WORD 2 DUP(88h), 6 DUP(66h), 2 DUP(0h)
 attribute7 WORD 2 DUP(0h), 7 DUP(66h), 0h
 attribute8 WORD 2 DUP(0h), 66h, 3 DUP(0h), 66h, 0h, 77h, 0h
 attribute9 WORD 2 DUP(0h), 77h, 3 DUP(0h), 77h, 3 DUP(0h)
+;覆蓋小馬顏色
+attribute_black WORD 10 DUP(0h)
+
+;障礙物顏色
+attributeA WORD 3 DUP(44h)
+attributeB WORD 3 DUP(44h)
+attributeC WORD 3 DUP(44h)
 
 .code
 main PROC
@@ -92,61 +100,35 @@ PLAY:
 	;用ReadKey可以不用等待讀取輸入，但輸入不限於空白鍵
 	call ReadKey
 	jz   nokeyPressed      ; no key pressed
-	call role_up
-	call role_up
+	;不可連續跳兩下
+	.IF rolePos.Y == 16
+		call role_up
+	.ENDIF
+
+
 nokeyPressed:
 	;印出分數
 	INVOKE getScore
 	;use delay to let obstacle look moving
 	INVOKE Sleep, drawDelay		
 	;如果角色跳起來，就讓他往下 
-	;若現在Y座標小於18(不知道為什麼是18)，呼叫role_down
+	;若現在Y座標小於一開始的位置，呼叫role_down
 	.IF rolePos.Y < role_up_Y
 		call role_down
-		call role_down
-		
+
+
 	.ENDIF
-	;draw obstacle with color blue
-	INVOKE WriteConsoleOutputAttribute, 
-			outHandle, 
-			ADDR attributes+204, 
-			1, 
-			obsPos, 
-			ADDR cellsWritten
-	; Write character codes to "D"
-	INVOKE WriteConsoleOutputCharacter, 
-			outHandle, 
-			ADDR buffer, 
-			1, 
-			obsPos, 
-			ADDR cellsWritten
-	;back to previous position to erase previous obstacle
-	inc obsPos.X		
-	;erase obstacle 
-	INVOKE WriteConsoleOutputAttribute, 
-			outHandle, 
-			ADDR attributes+2, 
-			1, 
-			obsPos, 
-			ADDR cellsWritten
-	; Write character codes to "D"
-	INVOKE WriteConsoleOutputCharacter, 
-			outHandle, 
-			ADDR buffer, 
-			1, 
-			obsPos, 
-			ADDR cellsWritten
-	;to the next position
-	sub obsPos.X, 2
-	mov ax,rolePos.X
+
+	call move_obstacle
+
+	mov ax,rolePos.x
 	;if obstacle and role in the same position, stop moving
-	.IF obsPos.X == ax
-		mov ax,rolePos.Y
-		add ax, 8
-		.IF obsPos.Y == ax
-			jmp END_PLAY
-		.ENDIF
-	.ENDIF
+	;.IF obsPos.X == ax
+	;	jmp END_PLAY
+	;.ENDIF
+
+	;無限輪迴
+	
 	jmp PLAY
 END_PLAY:
 	exit
@@ -175,12 +157,12 @@ quit:
 getScore ENDP
 
 role_up PROC
-;向上一格
+;向上一格半多
 	;erase old position
 	FORC num, <123456789>
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
-			0h, 
+			ADDR attribute_black, 
 			10, 
 			rolePos, 
 			ADDR cellsWritten
@@ -194,7 +176,7 @@ role_up PROC
 	ENDM
 
 	;draw a new one
-	sub rolePos.Y, 9
+	sub rolePos.Y, 15
 	dec rolePos.Y
 
 	FORC num, <123456789>
@@ -223,7 +205,7 @@ role_down PROC
 	FORC num, <123456789>
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
-			0h, 
+			ADDR attribute_black, 
 			10, 
 			rolePos, 
 			ADDR cellsWritten
@@ -259,5 +241,68 @@ role_down PROC
 	sub rolePos.Y, 9
 	ret
 role_down ENDP
+
+move_obstacle PROC
+	;draw obstacle with color red
+	FORC num, <ABC>
+		INVOKE WriteConsoleOutputAttribute, 
+			outHandle, 
+			ADDR attribute&num, 
+			3, 
+			obsPos, 
+			ADDR cellsWritten
+		INVOKE WriteConsoleOutputCharacter, 
+			outHandle, 
+			ADDR buffer, 
+			3, 
+			obsPos, 
+			ADDR cellsWritten
+		dec obsPos.Y			;每次畫一列，往上畫
+	ENDM
+	;back to previous position Y回到第一列，X倒退三行
+	add obsPos.X, 3
+	add obsPos.Y, 3
+	;erase obstacle 
+	FORC num, <ABC>
+		INVOKE WriteConsoleOutputAttribute, 
+			outHandle, 
+			ADDR attribute_black, 
+			3, 
+			obsPos, 
+			ADDR cellsWritten
+		INVOKE WriteConsoleOutputCharacter, 
+			outHandle, 
+			ADDR buffer, 
+			3, 
+			obsPos, 
+			ADDR cellsWritten
+		dec obsPos.Y
+	ENDM
+	;to the next position Y回到第一列，X前進六行
+	sub obsPos.X, 6
+	add obsPos.Y, 3
+	;若障礙物到達末端，從頭開始
+	.IF obsPos.X == 5
+		add obsPos.X, 3
+		FORC num, <ABC>
+		INVOKE WriteConsoleOutputAttribute, 
+			outHandle, 
+			ADDR attribute_black, 
+			3, 
+			obsPos, 
+			ADDR cellsWritten
+		INVOKE WriteConsoleOutputCharacter, 
+			outHandle, 
+			ADDR buffer, 
+			3, 
+			obsPos, 
+			ADDR cellsWritten
+		dec obsPos.Y
+	ENDM
+	mov obsPos.X, 110 
+	add obsPos.Y, 3
+	.ENDIF
+	ret
+move_obstacle ENDP
 
 END main
