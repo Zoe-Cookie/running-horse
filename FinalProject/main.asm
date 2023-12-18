@@ -32,6 +32,12 @@ attribute6 WORD 2 DUP(88h), 6 DUP(66h), 2 DUP(0h)
 attribute7 WORD 2 DUP(0h), 7 DUP(66h), 0h
 attribute8 WORD 2 DUP(0h), 66h, 3 DUP(0h), 66h, 0h, 77h, 0h
 attribute9 WORD 2 DUP(0h), 77h, 3 DUP(0h), 77h, 3 DUP(0h)
+;跑起來的小馬顏色
+attributeD WORD 5 DUP(0h), 88h,  2 DUP(66h), 2 DUP(0h)
+attributeE WORD 2 DUP(88h), 6 DUP(66h), 2 DUP(0h)
+attributeF WORD 2 DUP(0h), 6 DUP(66h), 2 DUP(0h)
+attributeG WORD 0h, 77h, 66h, 4 DUP(0h), 66h, 2 DUP(0h)
+attributeH WORD 3 DUP(0h), 4 DUP(0h), 77h, 2 DUP(0h)
 ;覆蓋小馬顏色
 attribute_black WORD 10 DUP(0h)
 
@@ -105,7 +111,6 @@ PLAY:
 		call role_up
 	.ENDIF
 
-
 nokeyPressed:
 	;印出分數
 	INVOKE getScore
@@ -115,8 +120,13 @@ nokeyPressed:
 	;若現在Y座標小於一開始的位置，呼叫role_down
 	.IF rolePos.Y < role_up_Y
 		call role_down
+	.ENDIF
 
-
+	;讓小馬跑起來
+	.IF rolePos.Y == 16
+		call role_move1
+		invoke Sleep, 50
+		call role_move2
 	.ENDIF
 
 	call move_obstacle
@@ -156,8 +166,92 @@ quit:
 	ret
 getScore ENDP
 
+role_move1 PROC
+;切換馬腳的兩種動作的第一種
+;erase old position
+	FORC num, <123456789>
+		INVOKE WriteConsoleOutputAttribute, 
+			outHandle, 
+			ADDR attribute_black, 
+			10, 
+			rolePos, 
+			ADDR cellsWritten
+		INVOKE WriteConsoleOutputCharacter, 
+			outHandle, 
+			ADDR buffer, 
+			10, 
+			rolePos, 
+			ADDR cellsWritten
+		inc rolePos.Y
+	ENDM
+
+	;draw a new one
+	sub rolePos.Y, 9
+
+	FORC num, <1234DEFGH>
+		INVOKE WriteConsoleOutputAttribute, 
+			outHandle, 
+			ADDR attribute&num, 
+			10, 
+			rolePos, 
+			ADDR cellsWritten
+		INVOKE WriteConsoleOutputCharacter, 
+			outHandle, 
+			ADDR buffer, 
+			10, 
+			rolePos, 
+			ADDR cellsWritten
+		inc rolePos.Y
+	ENDM
+
+	sub rolePos.Y, 9
+	ret
+role_move1 ENDP
+
+role_move2 PROC
+;切換馬腳的兩種動作的第二種
+;erase old position
+	FORC num, <123456789>
+		INVOKE WriteConsoleOutputAttribute, 
+			outHandle, 
+			ADDR attribute_black, 
+			10, 
+			rolePos, 
+			ADDR cellsWritten
+		INVOKE WriteConsoleOutputCharacter, 
+			outHandle, 
+			ADDR buffer, 
+			10, 
+			rolePos, 
+			ADDR cellsWritten
+		inc rolePos.Y
+	ENDM
+
+	;draw a new one
+	sub rolePos.Y, 9
+
+	FORC num, <123456789>
+		INVOKE WriteConsoleOutputAttribute, 
+			outHandle, 
+			ADDR attribute&num, 
+			10, 
+			rolePos, 
+			ADDR cellsWritten
+		INVOKE WriteConsoleOutputCharacter, 
+			outHandle, 
+			ADDR buffer, 
+			10, 
+			rolePos, 
+			ADDR cellsWritten
+		inc rolePos.Y
+	ENDM
+
+	sub rolePos.Y, 9
+	ret
+role_move2 ENDP
+
 role_up PROC
-;向上一格半多
+;向上7格
 	;erase old position
 	FORC num, <123456789>
 		INVOKE WriteConsoleOutputAttribute, 
