@@ -29,6 +29,7 @@ curPos COORD <104,1>
 role_up_Y = 16		;用於判斷有沒有跳起來
 score DWORD ?
 scoreSize DWORD ($-score)
+curInfo CONSOLE_CURSOR_INFO <100, FALSE>
 
 ;file
 testMsg BYTE "This is test message."
@@ -71,14 +72,16 @@ attributeC WORD 3 DUP(44h)
 main PROC
 	;set console title
 	INVOKE SetConsoleTitle, ADDR titleStr
-
 	; Get the console ouput handle
 	INVOKE GetStdHandle, STD_OUTPUT_HANDLE
 	mov outHandle, eax	; save console handle
 
+	;將cursor設為invisible比較美觀
+	INVOKE SetConsoleCursorInfo, 
+		outHandle, 
+		ADDR curInfo
 	;開始畫面
 	call startScreen
-
 	
 
 Start_again:
@@ -115,7 +118,8 @@ Start_again:
 			Ground, 
 			groundPos, 
 			ADDR cellsWritten
-	
+
+	mov curPos.X, 104 ;重新開始分數的位置才不會跑掉
 	INVOKE SetConsoleCursorPosition, 
 			outHandle, 
 			curPos
@@ -140,14 +144,15 @@ PLAY:
 	
 
 	;用ReadKey可以不用等待讀取輸入，但輸入不限於空白鍵
-	call ReadKey
-	jz   nokeyPressed      ; no key pressed
+	call ReadKey	;按的鍵好像會存到al中
+    cmp al, 20h     ;用 ASCII 空格字符的碼檢查是否為非空白字符
+    jne  spaceNotPressed ;space not pressed
 	;不可連續跳兩下
 	.IF rolePos.Y == 16
 		call role_up
 	.ENDIF
 
-nokeyPressed:
+spaceNotPressed:
 	;印出分數
 	INVOKE getScore
 	;use delay to let obstacle look moving
@@ -545,6 +550,4 @@ move_obstacle PROC
 	.ENDIF
 	ret
 move_obstacle ENDP
-
-
 END main
