@@ -1,10 +1,15 @@
 INCLUDE Irvine32.inc
 INCLUDE macros.inc
 
+fileAct PROTO
 getScore PROTO
+startScreen PROTO
+role_move1 PROTO
+role_move2 PROTO
 role_up PROTO		
 role_down PROTO
 move_obstacle PROTO
+
 
 .data
 Ground = 100 ;the length of ground
@@ -14,13 +19,27 @@ rolePos COORD <11,16>   ;initialize position of role
 groundPos COORD <11,25> ;initialize position of ground
 obsPos COORD <110,24>	;initialize position of obstacle
 obsBound COORD <11,24>
+startPos COORD <55,15>	;封面的字
 buffer BYTE Ground DUP(44h)							;character types
 attributes WORD 0Eh, 0h, Ground DUP(22h), 11h		;colors
 titleStr BYTE "小馬快快跑",0
 drawDelay DWORD 150	;to draw obstacle with a delay
 startTime DWORD ?   ;
-curPos COORD <110,1>
+curPos COORD <104,1>
 role_up_Y = 16		;用於判斷有沒有跳起來
+score DWORD ?
+scoreSize DWORD ($-score)
+
+;file
+testMsg BYTE "This is test message."
+testSize DWORD ($-testMsg)
+line BYTE ?
+lineSize DWORD ?
+errMsg BYTE "Cannot create file",0dh,0ah,0
+filename BYTE "Score.txt",0
+fileHandle DWORD ? ; handle to output file
+bytesWritten DWORD ? ; number of bytes written
+bytesRead DWORD ? ; number of bytes read
 
 ;小馬顏色
 attribute1 WORD 6 DUP(0h), 66h, 0h, 66h, 0h
@@ -46,6 +65,8 @@ attributeA WORD 3 DUP(44h)
 attributeB WORD 3 DUP(44h)
 attributeC WORD 3 DUP(44h)
 
+
+
 .code
 main PROC
 	;set console title
@@ -54,8 +75,13 @@ main PROC
 	; Get the console ouput handle
 	INVOKE GetStdHandle, STD_OUTPUT_HANDLE
 	mov outHandle, eax	; save console handle
-	call Clrscr	;clear screen
 
+	;開始畫面
+	call startScreen
+
+	
+
+Start_again:
 	; Set the role to (11,10):
 	FORC num, <123456789>
 		INVOKE WriteConsoleOutputAttribute, 
@@ -89,20 +115,30 @@ main PROC
 			Ground, 
 			groundPos, 
 			ADDR cellsWritten
-	;得到開始時間
+	
 	INVOKE SetConsoleCursorPosition, 
 			outHandle, 
 			curPos
+	mWrite "Score:"
+	;得到開始時間
 	INVOKE GetTickCount ; get starting tick count
 	mov startTime,eax ; save it
 	;顯示零
+	add curPos.X, 7
+	INVOKE SetConsoleCursorPosition, 
+			outHandle, 
+			curPos
 	mov eax,0
 	call WriteDec ; display it
+
+	
 
 ;要先判斷有沒有輸入	
 	
 ;Start moving	
 PLAY:
+	
+
 	;用ReadKey可以不用等待讀取輸入，但輸入不限於空白鍵
 	call ReadKey
 	jz   nokeyPressed      ; no key pressed
@@ -131,18 +167,104 @@ nokeyPressed:
 
 	call move_obstacle
 
-	mov ax,rolePos.x
+	mov ax,rolePos.X
+	add ax, 5
 	;if obstacle and role in the same position, stop moving
-	;.IF obsPos.X == ax
-	;	jmp END_PLAY
-	;.ENDIF
-
-	;無限輪迴
-	
+	.IF obsPos.X <= ax && rolePos.Y >= 13
+		
+		jmp END_PLAY
+		
+	.ENDIF
 	jmp PLAY
 END_PLAY:
+	mov  eax,500 ;delay 1 sec
+    call Delay
+	call Clrscr
+	INVOKE SetConsoleCursorPosition, 
+		outHandle, 
+		startPos
+	mWrite "Game Over"
+	inc startPos.Y
+	INVOKE SetConsoleCursorPosition, 
+		outHandle, 
+		startPos
+	mWrite "Your score is "
+	mov eax, score
+	call WriteDec
+	;retry
+	inc startPos.Y
+	INVOKE SetConsoleCursorPosition, 
+		outHandle, 
+		startPos
+	mWrite "Press space to play again"
+	call Readchar
+	.IF ax == 3920h
+		call Clrscr
+		mov obsPos.X, 110
+		jmp Start_again
+	.ENDIF
+
+	call Crlf
+	;call fileAct	;測試寫檔讀檔
+EndMain:
+	
 	exit
 main ENDP
+
+fileAct PROC
+	INVOKE CreateFile,
+		ADDR filename, 
+		GENERIC_WRITE, 
+		DO_NOT_SHARE, 
+		NULL,
+		OPEN_EXISTING, 
+		FILE_ATTRIBUTE_NORMAL, 
+		0
+	mov fileHandle,eax ; save file handle
+	.IF eax == INVALID_HANDLE_VALUE
+		mov edx,OFFSET errMsg ; Display error message
+		call WriteString
+		jmp QuitNow
+	.ENDIF
+	INVOKE WriteFile, ; write text to file
+		fileHandle, ; file handle
+		ADDR testMsg, ; buffer pointer
+		testSize, ; number of bytes to write
+		ADDR bytesWritten, ; number of bytes written
+		0 ; overlapped execution flag
+	INVOKE CloseHandle, fileHandle
+
+	INVOKE CreateFile,
+		ADDR filename, 
+		GENERIC_READ, 
+		DO_NOT_SHARE, 
+		NULL,
+		OPEN_EXISTING, 
+		FILE_ATTRIBUTE_NORMAL, 
+		0
+	mov fileHandle,eax ; save file handle
+	.IF eax == INVALID_HANDLE_VALUE
+		mov edx,OFFSET errMsg ; Display error message
+		call WriteString
+		jmp QuitNow
+	.ENDIF
+
+	INVOKE SetFilePointer,
+		fileHandle,0,0,FILE_BEGIN
+
+	INVOKE ReadFile,
+		fileHandle,		; handle to file
+		ADDR line,			; ptr to buffer
+		testSize,		; num bytes to read
+		ADDR bytesRead,		; bytes actually read
+		NULL			; NULL (0) for syn mode
+
+	mov  edx,OFFSET line
+    call WriteString
+	INVOKE CloseHandle, fileHandle
+QuitNow:
+	ret
+fileAct ENDP
 
 getScore PROC, 
 	;用經過的milliseconds當作分數
@@ -154,17 +276,42 @@ getScore PROC,
 	cmp eax,startTime	; lower than starting one
 	jb errorTime
 	sub eax,startTime	; get elapsed milliseconds
-	;除以16讓數字增加幅度變小
+	;除以1000讓數字變小
 	mov edx, 0h			
-	mov ecx, 10h
+	mov ecx, 03E8h
 	div ecx
 	call WriteDec ; display it
+	mov score, eax
+	;15秒增加速度，到330秒極限
+	mov edx, 0h
+	mov ecx, 0fh
+	div ecx
+	.IF edx == 0
+		sub drawDelay, 1
+	.ENDIF
+
 	jmp quit
 errorTime:
 	mWrite "Reach Highest Goal!"
 quit:
 	ret
 getScore ENDP
+
+startScreen PROC
+	INVOKE SetConsoleCursorPosition, 
+		outHandle, 
+		startPos
+	mWrite "Press space to start"
+notSpace:
+	call Readchar
+	.IF ax == 3920h
+		call Clrscr	;clear screen
+		jmp startGame
+	.ENDIF
+	jmp notSpace
+startGame:
+	ret
+startScreen ENDP
 
 role_move1 PROC
 ;切換馬腳的兩種動作的第一種
@@ -398,5 +545,6 @@ move_obstacle PROC
 	.ENDIF
 	ret
 move_obstacle ENDP
+
 
 END main
