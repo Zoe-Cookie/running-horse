@@ -29,7 +29,7 @@ curPos COORD <104,1>
 role_up_Y = 16		;用於判斷有沒有跳起來
 score DWORD ?
 scoreSize DWORD ($-score)
-curInfo CONSOLE_CURSOR_INFO <100, FALSE>
+curInfo CONSOLE_CURSOR_INFO <1, FALSE>
 
 ;file
 testMsg BYTE "This is test message."
@@ -176,7 +176,6 @@ spaceNotPressed:
 	add ax, 5
 	;if obstacle and role in the same position, stop moving
 	.IF obsPos.X <= ax && rolePos.Y >= 13
-		
 		jmp END_PLAY
 		
 	.ENDIF
@@ -185,25 +184,29 @@ END_PLAY:
 	mov  eax,500 ;delay 1 sec
     call Delay
 	call Clrscr
+	INVOKE Sleep, 1000
+	mov startPos.Y, 15 
 	INVOKE SetConsoleCursorPosition, 
 		outHandle, 
 		startPos
 	mWrite "Game Over"
 	inc startPos.Y
+	INVOKE Sleep, 1000
 	INVOKE SetConsoleCursorPosition, 
 		outHandle, 
 		startPos
 	mWrite "Your score is "
 	mov eax, score
 	call WriteDec
+	INVOKE Sleep, 1000
 	;retry
 	inc startPos.Y
-	INVOKE SetConsoleCursorPosition, 
+	INVOKE SetConsoleCursorPosition,  
 		outHandle, 
 		startPos
 	mWrite "Press space to play again"
 	call Readchar
-	.IF ax == 3920h
+	.IF ax == 3920h ;要改成R之類的按鍵
 		call Clrscr
 		mov obsPos.X, 110
 		jmp Start_again
