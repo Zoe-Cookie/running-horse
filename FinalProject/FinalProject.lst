@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler Version 14.29.30152.0	    12/21/23 22:24:33
+Microsoft (R) Macro Assembler Version 14.29.30152.0	    12/21/23 22:44:51
 main.asm						     Page 1 - 1
 
 
@@ -43,7 +43,7 @@ main.asm						     Page 1 - 1
  0000000C 000B 0019		groundPos COORD <11,25> ;initialize position of ground
  00000010 006E 0018		obsPos COORD <110,24>	;initialize position of obstacle
  00000014 000B 0018		obsBound COORD <11,24>
- 00000018 0037 000F		startPos COORD <55,15>	;封面的字
+ 00000018 0000 0002		startPos COORD <0,2>	;封面的字
  0000001C  00000064 [		buffer BYTE Ground DUP(44h)							;character types
 	    44
 	   ]
@@ -60,54 +60,53 @@ main.asm						     Page 1 - 1
  00000166 0068 0001		curPos COORD <104,1>
  = 00000010			role_up_Y = 16		;用於判斷有沒有跳起來
  0000016A 00000000		score DWORD ?
- 0000016E 00000000		temp DWORD ?
- 00000172 00000008		scoreSize DWORD ($-score)
- 00000176 00000001		curInfo CONSOLE_CURSOR_INFO <1, FALSE>
+ 0000016E 00000004		scoreSize DWORD ($-score)
+ 00000172 00000001		curInfo CONSOLE_CURSOR_INFO <1, FALSE>
 	   00000000
- 0000017E 00000008		range DWORD 8
+ 0000017A 00000008		range DWORD 8
 
 				;file
- 00000182 54 68 69 73 20	testMsg BYTE "This is test message."
+ 0000017E 54 68 69 73 20	testMsg BYTE "This is test message."
 	   69 73 20 74 65
 	   73 74 20 6D 65
 	   73 73 61 67 65
 	   2E
- 00000197 00000015		testSize DWORD ($-testMsg)
- 0000019B 00			line BYTE ?
- 0000019C 00000000		lineSize DWORD ?
- 000001A0 43 61 6E 6E 6F	errMsg BYTE "Cannot create file",0dh,0ah,0
+ 00000193 00000015		testSize DWORD ($-testMsg)
+ 00000197 00			line BYTE ?
+ 00000198 00000000		lineSize DWORD ?
+ 0000019C 43 61 6E 6E 6F	errMsg BYTE "Cannot create file",0dh,0ah,0
 	   74 20 63 72 65
 	   61 74 65 20 66
 	   69 6C 65 0D 0A
 	   00
- 000001B5 53 63 6F 72 65	filename BYTE "Score.txt",0
+ 000001B1 53 63 6F 72 65	filename BYTE "Score.txt",0
 	   2E 74 78 74 00
- 000001BF 00000000		fileHandle DWORD ? ; handle to output file
- 000001C3 00000000		bytesWritten DWORD ? ; number of bytes written
- 000001C7 00000000		bytesRead DWORD ? ; number of bytes read
+ 000001BB 00000000		fileHandle DWORD ? ; handle to output file
+ 000001BF 00000000		bytesWritten DWORD ? ; number of bytes written
+ 000001C3 00000000		bytesRead DWORD ? ; number of bytes read
 
 				;小馬顏色
- 000001CB  00000006 [		attributeA WORD 6 DUP(0h), 66h, 0h, 66h, 0h
+ 000001C7  00000006 [		attribute1 WORD 6 DUP(0h), 66h, 0h, 66h, 0h
 	    0000
 	   ] 0066 0000
 	   0066 0000
- 000001DF  00000006 [		attributeB WORD 6 DUP(0h), 66h, 2 DUP(88h), 0h
+ 000001DB  00000006 [		attribute2 WORD 6 DUP(0h), 66h, 2 DUP(88h), 0h
 	    0000
 	   ] 0066
 	   00000002 [
 	    0088
 	   ] 0000
- 000001F3  00000005 [		attributeC WORD 5 DUP(0h), 88h, 11h, 66h, 11h, 0h
+ 000001EF  00000005 [		attribute3 WORD 5 DUP(0h), 88h, 11h, 66h, 11h, 0h
 	    0000
 	   ] 0088 0011
 	   0066 0011 0000
- 00000207  00000005 [		attributeD WORD 5 DUP(0h), 66h, 4 DUP(66h)
+ 00000203  00000005 [		attribute4 WORD 5 DUP(0h), 66h, 4 DUP(66h)
 	    0000
 	   ] 0066
 	   00000004 [
 	    0066
 	   ]
- 0000021B 0088			attributeE WORD 88h, 4 DUP(0h), 88h,  2 DUP(66h), 2 DUP(0h)
+ 00000217 0088			attribute5 WORD 88h, 4 DUP(0h), 88h,  2 DUP(66h), 2 DUP(0h)
 	   00000004 [
 	    0000
 	   ] 0088
@@ -117,7 +116,7 @@ main.asm						     Page 1 - 1
 	   00000002 [
 	    0000
 	   ]
- 0000022F  00000002 [		attributeF WORD 2 DUP(88h), 6 DUP(66h), 2 DUP(0h)
+ 0000022B  00000002 [		attribute6 WORD 2 DUP(88h), 6 DUP(66h), 2 DUP(0h)
 	    0088
 	   ]
 	   00000006 [
@@ -126,20 +125,20 @@ main.asm						     Page 1 - 1
 	   00000002 [
 	    0000
 	   ]
- 00000243  00000002 [		attributeG WORD 2 DUP(0h), 7 DUP(66h), 0h
+ 0000023F  00000002 [		attribute7 WORD 2 DUP(0h), 7 DUP(66h), 0h
 	    0000
 	   ]
 	   00000007 [
 	    0066
 	   ] 0000
- 00000257  00000002 [		attributeH WORD 2 DUP(0h), 66h, 3 DUP(0h), 66h, 0h, 77h, 0h
+ 00000253  00000002 [		attribute8 WORD 2 DUP(0h), 66h, 3 DUP(0h), 66h, 0h, 77h, 0h
 	    0000
 	   ] 0066
 	   00000003 [
 	    0000
 	   ] 0066 0000
 	   0077 0000
- 0000026B  00000002 [		attributeI WORD 2 DUP(0h), 77h, 3 DUP(0h), 77h, 3 DUP(0h)
+ 00000267  00000002 [		attribute9 WORD 2 DUP(0h), 77h, 3 DUP(0h), 77h, 3 DUP(0h)
 	    0000
 	   ] 0077
 	   00000003 [
@@ -149,7 +148,7 @@ main.asm						     Page 1 - 1
 	    0000
 	   ]
 				;跑起來的小馬顏色
- 0000027F  00000005 [		attributeJ WORD 5 DUP(0h), 88h,  2 DUP(66h), 2 DUP(0h)
+ 0000027B  00000005 [		attributeD WORD 5 DUP(0h), 88h,  2 DUP(66h), 2 DUP(0h)
 	    0000
 	   ] 0088
 	   00000002 [
@@ -158,7 +157,7 @@ main.asm						     Page 1 - 1
 	   00000002 [
 	    0000
 	   ]
- 00000293  00000002 [		attributeK WORD 2 DUP(88h), 6 DUP(66h), 2 DUP(0h)
+ 0000028F  00000002 [		attributeE WORD 2 DUP(88h), 6 DUP(66h), 2 DUP(0h)
 	    0088
 	   ]
 	   00000006 [
@@ -167,7 +166,7 @@ main.asm						     Page 1 - 1
 	   00000002 [
 	    0000
 	   ]
- 000002A7  00000002 [		attributeL WORD 2 DUP(0h), 6 DUP(66h), 2 DUP(0h)
+ 000002A3  00000002 [		attributeF WORD 2 DUP(0h), 6 DUP(66h), 2 DUP(0h)
 	    0000
 	   ]
 	   00000006 [
@@ -176,14 +175,14 @@ main.asm						     Page 1 - 1
 	   00000002 [
 	    0000
 	   ]
- 000002BB 0000 0077 0066	attributeM WORD 0h, 77h, 66h, 4 DUP(0h), 66h, 2 DUP(0h)
+ 000002B7 0000 0077 0066	attributeG WORD 0h, 77h, 66h, 4 DUP(0h), 66h, 2 DUP(0h)
 	   00000004 [
 	    0000
 	   ] 0066
 	   00000002 [
 	    0000
 	   ]
- 000002CF  00000003 [		attributeN WORD 3 DUP(0h), 4 DUP(0h), 77h, 2 DUP(0h)
+ 000002CB  00000003 [		attributeH WORD 3 DUP(0h), 4 DUP(0h), 77h, 2 DUP(0h)
 	    0000
 	   ]
 	   00000004 [
@@ -193,17 +192,549 @@ main.asm						     Page 1 - 1
 	    0000
 	   ]
 				;覆蓋小馬顏色
- 000002E3  0000000A [		attribute_black WORD 10 DUP(0h)
+ 000002DF  0000000A [		attribute_black WORD 10 DUP(0h)
 	    0000
 	   ]
 
 				;障礙物顏色
- 000002F7  00000003 [		attribute WORD 3 DUP(44h)
+ 000002F3  00000003 [		attribute WORD 3 DUP(44h)
 	    0044
 	   ]
- 000002FD 0044 0011 0022	attribute0 WORD 44h, 11h, 22h, 33h, 55h, 66h, 77h, 88h
+ 000002F9 0044 0011 0022	attribute0 WORD 44h, 11h, 22h, 33h, 55h, 66h, 77h, 88h
 	   0033 0055 0066
 	   0077 0088
+
+				;Running 75個
+ 00000309  0000000A [		attributeI WORD 10 DUP(0h), 7 DUP(11h)  
+	    0000
+	   ]
+	   00000007 [
+	    0011
+	   ]
+ 0000032B  00000024 [				   WORD 36 DUP(0h), 2 DUP(11h), 19 DUP(0h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+	   00000013 [
+	    0000
+	   ]
+ 0000039D  0000000A [		attributeJ WORD 10 DUP(0h), 2 DUP(11h), 5 DUP(0h), 2 DUP(11h), 51 DUP(0h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+	   00000005 [
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+	   00000033 [
+	    0000
+	   ]
+ 00000429  0000000A [		attributeK WORD 10 DUP(0h), 7 DUP(11h)
+	    0000
+	   ]
+	   00000007 [
+	    0011
+	   ]
+ 0000044B  00000005 [				   WORD 5 DUP(0h), 2 DUP(11h), 3 DUP(0h), 2 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+	   00000003 [
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 00000463  00000004 [				   WORD 4 DUP(0h), 2 DUP(11h), 0h, 3 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ] 0000
+	   00000003 [
+	    0011
+	   ]
+ 00000477  00000004 [				   WORD 4 DUP(0h), 2 DUP(11h), 0h, 3 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ] 0000
+	   00000003 [
+	    0011
+	   ]
+ 0000048B  00000004 [				   WORD 4 DUP(0h), 2 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 00000497  00000002 [				   WORD 2 DUP(0h), 2 DUP(11h), 0h, 3 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ] 0000
+	   00000003 [
+	    0011
+	   ]
+ 000004A7  00000006 [				   WORD 6 DUP(0h), 4 DUP(11h)
+	    0000
+	   ]
+	   00000004 [
+	    0011
+	   ]
+ 000004BB  0000000A [		attributeL WORD 10 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h) 
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 000004DF  00000004 [				   WORD 4 DUP(0h), 2 DUP(11h), 3 DUP(0h), 2 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+	   00000003 [
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 000004F5  00000004 [				   WORD 4 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 0000050D  00000002 [				   WORD 2 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 00000521  00000002 [				   WORD 2 DUP(0h), 2 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 00000529  00000002 [				   WORD 2 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 0000053D  00000002 [				   WORD 2 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 00000551  0000000A [		attributeM WORD 10 DUP(0h), 2 DUP(11h), 6 DUP(0h), 2 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+	   00000006 [
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 00000579  00000004 [				   WORD 4 DUP(0h), 3 DUP(11h), 2 DUP(0h), 2 DUP(11h)
+	    0000
+	   ]
+	   00000003 [
+	    0011
+	   ]
+	   00000002 [
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 0000058F  00000002 [				   WORD 2 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 000005A3  00000002 [				   WORD 2 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 000005B7  00000002 [				   WORD 2 DUP(0h), 2 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 000005BF  00000002 [				   WORD 2 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 000005D3  00000004 [				   WORD 4 DUP(0h), 4 DUP(11h)
+	    0000
+	   ]
+	   00000004 [
+	    0011
+	   ]
+ 000005E3  00000049 [		attributeN WORD 73 DUP(0h), 2 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 00000679  00000043 [		attributeO WORD 67 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h)
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0011
+	   ]
+ 0000070F  00000045 [		attributeP WORD 69 DUP(0h), 4 DUP(11h), 2 DUP(0h)
+	    0000
+	   ]
+	   00000004 [
+	    0011
+	   ]
+	   00000002 [
+	    0000
+	   ]
+
+				;H0URSE 101格
+ 000007A5  0000002B [		attributeQ WORD 43 DUP(0h), 2 DUP(44h), 4 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 0000080B  00000004 [				   WORD 4 DUP(0h), 4 DUP(44h)
+	    0000
+	   ]
+	   00000004 [
+	    0044
+	   ]
+ 0000081B  00000004 [				   WORD 4 DUP(0h), 2 DUP(44h), 5 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+	   00000005 [
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 00000835  00000002 [				   WORD 2 DUP(0h), 7 DUP(44h)
+	    0000
+	   ]
+	   00000007 [
+	    0044
+	   ]
+ 00000847  00000006 [				   WORD 6 DUP(0h), 4 DUP(44h)
+	    0000
+	   ]
+	   00000004 [
+	    0044
+	   ]
+ 0000085B  00000003 [				   WORD 3 DUP(0h), 7 DUP(44h)
+	    0000
+	   ]
+	   00000007 [
+	    0044
+	   ]
+ 0000086F  0000002B [		attributeR WORD 43 DUP(0h), 2 DUP(44h), 4 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 000008D5  00000002 [				   WORD 2 DUP(0h), 2 DUP(44h), 4 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 000008E9  00000002 [				   WORD 2 DUP(0h), 2 DUP(44h), 5 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+	   00000005 [
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 000008FF  00000002 [				   WORD 2 DUP(0h), 2 DUP(44h), 5 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+	   00000005 [
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 00000915  00000002 [				   WORD 2 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 0000091D  00000007 [				   WORD 7 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 0000092F  0000002B [		attributeT WORD 43 DUP(0h), 8 DUP(44h)
+	    0000
+	   ]
+	   00000008 [
+	    0044
+	   ]
+ 00000995  00000002 [				   WORD 2 DUP(0h), 2 DUP(44h), 4 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 000009A9  00000002 [				   WORD 2 DUP(0h), 2 DUP(44h), 5 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+	   00000005 [
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 000009BF  00000002 [				   WORD 2 DUP(0h), 7 DUP(44h)
+	    0000
+	   ]
+	   00000007 [
+	    0044
+	   ]
+ 000009D1  00000006 [				   WORD 6 DUP(0h), 3 DUP(44h)
+	    0000
+	   ]
+	   00000003 [
+	    0044
+	   ]
+ 000009E3  00000004 [				   WORD 4 DUP(0h), 7 DUP(44h)
+	    0000
+	   ]
+	   00000007 [
+	    0044
+	   ]
+ 000009F9  0000002B [		attributeU WORD 43 DUP(0h), 2 DUP(44h), 4 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 00000A5F  00000002 [				   WORD 2 DUP(0h), 2 DUP(44h), 4 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 00000A73  00000003 [				   WORD 3 DUP(0h), 2 DUP(44h), 3 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+	   00000003 [
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 00000A87  00000003 [				   WORD 3 DUP(0h), 2 DUP(44h), 4 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 00000A9D  00000008 [				   WORD 8 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 00000AB1  00000002 [				   WORD 2 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 00000AB9  0000002B [		attributeV WORD 43 DUP(0h), 2 DUP(44h), 4 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+	   00000004 [
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 00000B1F  00000004 [				   WORD 4 DUP(0h), 4 DUP(44h)
+	    0000
+	   ]
+	   00000004 [
+	    0044
+	   ]
+ 00000B2F  00000007 [				   WORD 7 DUP(0h), 3 DUP(44h)
+	    0000
+	   ]
+	   00000003 [
+	    0044
+	   ]
+ 00000B43  00000005 [				   WORD 5 DUP(0h), 2 DUP(44h), 6 DUP(0h), 2 DUP(44h)
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+	   00000006 [
+	    0000
+	   ]
+	   00000002 [
+	    0044
+	   ]
+ 00000B61  00000002 [				   WORD 2 DUP(0h), 4 DUP(44h)
+	    0000
+	   ]
+	   00000004 [
+	    0044
+	   ]
+ 00000B6D  00000004 [				   WORD 4 DUP(0h), 7 DUP(44h)
+	    0000
+	   ]
+	   00000007 [
+	    0044
+	   ]
 
  00000000			.code
  00000000			main PROC
@@ -218,12 +749,18 @@ main.asm						     Page 1 - 1
 						outHandle, 
 						ADDR curInfo
 					;開始畫面
- 00000026  E8 00000558			call startScreen
+ 00000026  E8 0000057A			call startScreen
 					
-
- 0000002B			Start_again:
-					; Set the role to (11,10):
-					FORC num, <ABCDEFGHI>
+					;角色位置重置
+ 0000002B  66| C7 05			mov rolePos.X, 11
+	   00000008 R
+	   000B
+ 00000034  66| C7 05			mov rolePos.Y, 16
+	   0000000A R
+	   0010
+ 0000003D			Start_again:
+					; Set the role to (11,16):
+					FORC num, <123456789>
 						INVOKE WriteConsoleOutputAttribute, 
 							outHandle, 
 							ADDR attribute&num, 
@@ -238,26 +775,26 @@ main.asm						     Page 1 - 1
 							ADDR cellsWritten
 						inc rolePos.Y
 					ENDM
- 00000065  66| FF 05	     1			inc rolePos.Y
+ 00000077  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000000A6  66| FF 05	     1			inc rolePos.Y
+ 000000B8  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000000E7  66| FF 05	     1			inc rolePos.Y
+ 000000F9  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000128  66| FF 05	     1			inc rolePos.Y
+ 0000013A  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000169  66| FF 05	     1			inc rolePos.Y
+ 0000017B  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000001AA  66| FF 05	     1			inc rolePos.Y
+ 000001BC  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000001EB  66| FF 05	     1			inc rolePos.Y
+ 000001FD  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000022C  66| FF 05	     1			inc rolePos.Y
+ 0000023E  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000026D  66| FF 05	     1			inc rolePos.Y
+ 0000027F  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
 
- 00000274  66| 83 2D			sub rolePos.Y, 9
+ 00000286  66| 83 2D			sub rolePos.Y, 9
 	   0000000A R 09
 
 					;draw the ground
@@ -274,50 +811,53 @@ main.asm						     Page 1 - 1
 							Ground, 
 							groundPos, 
 							ADDR cellsWritten
-
- 000002B6  66| C7 05			mov curPos.X, 104 ;重新開始分數的位置才不會跑掉
+ 000002C8  C7 05 0000015E R		mov drawDelay, 150	;重新設定速度
+	   00000096
+ 000002D2  66| C7 05			mov curPos.X, 104	;重新開始分數的位置才不會跑掉
 	   00000166 R
 	   0068
 					INVOKE SetConsoleCursorPosition, 
 							outHandle, 
 							curPos
 					mWrite "Score:"
- 0000030D		     1		.data		
- 0000030D 53 63 6F 72 65     1		??0000 BYTE "Score:",0	
+ 00000B83		     1		.data		
+ 00000B83 53 63 6F 72 65     1		??0000 BYTE "Score:",0	
 	   3A 00
- 000002D0		     1		.code
- 000002D0  52		     1		push	edx
- 000002D1  BA 0000030D R     1		mov	edx,OFFSET ??0000
- 000002D6  E8 00000000 E     1		call	WriteString
- 000002DB  5A		     1		pop	edx
+ 000002EC		     1		.code
+ 000002EC  52		     1		push	edx
+ 000002ED  BA 00000B83 R     1		mov	edx,OFFSET ??0000
+ 000002F2  E8 00000000 E     1		call	WriteString
+ 000002F7  5A		     1		pop	edx
 					;得到開始時間
 					INVOKE GetTickCount ; get starting tick count
- 000002E1  A3 00000162 R		mov startTime,eax ; save it
+ 000002FD  A3 00000162 R		mov startTime,eax ; save it
 					;顯示零
- 000002E6  66| 83 05			add curPos.X, 7
+ 00000302  66| 83 05			add curPos.X, 7
 	   00000166 R 07
 					INVOKE SetConsoleCursorPosition, 
 							outHandle, 
 							curPos
- 000002FF  B8 00000000			mov eax,0
- 00000304  E8 00000000 E		call WriteDec ; display it
+ 0000031B  B8 00000000			mov eax,0
+ 00000320  E8 00000000 E		call WriteDec ; display it
 
 					
 
 				;要先判斷有沒有輸入	
 					
 				;Start moving	
- 00000309			PLAY:
+ 00000325			PLAY:
+					
+
 					;用ReadKey可以不用等待讀取輸入，但輸入不限於空白鍵
- 00000309  E8 00000000 E		call ReadKey	;按的鍵好像會存到al中
- 0000030E  3C 20		    cmp al, 20h     ;用 ASCII 空格字符的碼檢查是否為非空白字符
- 00000310  75 0F		    jne  spaceNotPressed ;space not pressed
+ 00000325  E8 00000000 E		call ReadKey	;按的鍵好像會存到al中
+ 0000032A  3C 20		    cmp al, 20h     ;用 ASCII 空格字符的碼檢查是否為非空白字符
+ 0000032C  75 0F		    jne  spaceNotPressed ;space not pressed
 					;不可連續跳兩下
 					.IF rolePos.Y == 16
- 0000031C  E8 00000BDA				call role_up
+ 00000338  E8 0000119E				call role_up
 					.ENDIF
 
- 00000321			spaceNotPressed:
+ 0000033D			spaceNotPressed:
 					;印出分數
 					INVOKE getScore
 					;use delay to let obstacle look moving
@@ -325,102 +865,105 @@ main.asm						     Page 1 - 1
 					;如果角色跳起來，就讓他往下 
 					;若現在Y座標小於一開始的位置，呼叫role_down
 					.IF rolePos.Y < role_up_Y
- 0000033B  E8 0000105E				call role_down
+ 00000357  E8 00001629				call role_down
 					.ENDIF
 
 					;讓小馬跑起來
 					.IF rolePos.Y == 16
- 0000034A  E8 00000266				call role_move1
+ 00000366  E8 0000082A				call role_move1
 						invoke Sleep, 50
- 00000356  E8 000006FD				call role_move2
+ 00000372  E8 00000CC1				call role_move2
 					.ENDIF
 
- 0000035B  E8 000014E8			call move_obstacle
+ 00000377  E8 00001AB3			call move_obstacle
 
- 00000360  66| A1			mov ax,rolePos.X
+ 0000037C  66| A1			mov ax,rolePos.X
 	   00000008 R
- 00000366  66| 83 C0 05			add ax, 5
+ 00000382  66| 83 C0 05			add ax, 5
 					;if obstacle and role in the same position, stop moving
 					.IF obsPos.X <= ax && rolePos.Y >= 13
- 0000037D  EB 02				jmp END_PLAY
+ 00000399  EB 02				jmp END_PLAY
 						
 					.ENDIF
- 0000037F  EB 88			jmp PLAY
- 00000381			END_PLAY:
- 00000381  B8 000001F4			mov  eax,500 ;delay 1 sec
- 00000386  E8 00000000 E	    call Delay
- 0000038B  E8 00000000 E		call Clrscr
+ 0000039B  EB 88			jmp PLAY
+ 0000039D			END_PLAY:
+ 0000039D  B8 000001F4			mov  eax,500 ;delay 1 sec
+ 000003A2  E8 00000000 E	    call Delay
+ 000003A7  E8 00000000 E		call Clrscr
 					INVOKE Sleep, 1000
- 0000039A  66| C7 05			mov startPos.Y, 15 
+ 000003B6  66| C7 05			mov startPos.Y, 15 
 	   0000001A R
 	   000F
 					INVOKE SetConsoleCursorPosition, 
 						outHandle, 
 						startPos
 					mWrite "Game Over"
- 00000314		     1		.data		
- 00000314 47 61 6D 65 20     1		??0001 BYTE "Game Over",0	
+ 00000B8A		     1		.data		
+ 00000B8A 47 61 6D 65 20     1		??0001 BYTE "Game Over",0	
 	   4F 76 65 72 00
- 000003B4		     1		.code
- 000003B4  52		     1		push	edx
- 000003B5  BA 00000314 R     1		mov	edx,OFFSET ??0001
- 000003BA  E8 00000000 E     1		call	WriteString
- 000003BF  5A		     1		pop	edx
- 000003C0  66| FF 05			inc startPos.Y
+ 000003D0		     1		.code
+ 000003D0  52		     1		push	edx
+ 000003D1  BA 00000B8A R     1		mov	edx,OFFSET ??0001
+ 000003D6  E8 00000000 E     1		call	WriteString
+ 000003DB  5A		     1		pop	edx
+ 000003DC  66| FF 05			inc startPos.Y
 	   0000001A R
 					INVOKE Sleep, 1000
 					INVOKE SetConsoleCursorPosition, 
 						outHandle, 
 						startPos
 					mWrite "Your score is "
- 0000031E		     1		.data		
- 0000031E 59 6F 75 72 20     1		??0002 BYTE "Your score is ",0	
+ 00000B94		     1		.data		
+ 00000B94 59 6F 75 72 20     1		??0002 BYTE "Your score is ",0	
 	   73 63 6F 72 65
 	   20 69 73 20 00
- 000003E2		     1		.code
- 000003E2  52		     1		push	edx
- 000003E3  BA 0000031E R     1		mov	edx,OFFSET ??0002
- 000003E8  E8 00000000 E     1		call	WriteString
- 000003ED  5A		     1		pop	edx
- 000003EE  A1 0000016A R		mov eax, score
- 000003F3  E8 00000000 E		call WriteDec
+ 000003FE		     1		.code
+ 000003FE  52		     1		push	edx
+ 000003FF  BA 00000B94 R     1		mov	edx,OFFSET ??0002
+ 00000404  E8 00000000 E     1		call	WriteString
+ 00000409  5A		     1		pop	edx
+ 0000040A  A1 0000016A R		mov eax, score
+ 0000040F  E8 00000000 E		call WriteDec
 					INVOKE Sleep, 1000
 					;retry
- 00000402  66| FF 05			inc startPos.Y
+ 0000041E  66| FF 05			inc startPos.Y
 	   0000001A R
 					INVOKE SetConsoleCursorPosition,  
 						outHandle, 
 						startPos
-					mWrite "Press space to play again"
- 0000032D		     1		.data		
- 0000032D 50 72 65 73 73     1		??0003 BYTE "Press space to play again",0	
-	   20 73 70 61 63
-	   65 20 74 6F 20
-	   70 6C 61 79 20
-	   61 67 61 69 6E
-	   00
- 0000041A		     1		.code
- 0000041A  52		     1		push	edx
- 0000041B  BA 0000032D R     1		mov	edx,OFFSET ??0003
- 00000420  E8 00000000 E     1		call	WriteString
- 00000425  5A		     1		pop	edx
- 00000426  E8 00000000 E		call Readchar
-					.IF ax == 3920h ;要改成R之類的按鍵
- 00000431  E8 00000000 E			call Clrscr
- 00000436  66| C7 05				mov obsPos.X, 110
+					mWrite "Press ""r"" to play again or others to leave"
+ 00000BA3		     1		.data		
+ 00000BA3 50 72 65 73 73     1		??0003 BYTE "Press ""r"" to play again or others to leave",0	
+	   20 22 72 22 20
+	   74 6F 20 70 6C
+	   61 79 20 61 67
+	   61 69 6E 20 6F
+	   72 20 6F 74 68
+	   65 72 73 20 74
+	   6F 20 6C 65 61
+	   76 65 00
+ 00000436		     1		.code
+ 00000436  52		     1		push	edx
+ 00000437  BA 00000BA3 R     1		mov	edx,OFFSET ??0003
+ 0000043C  E8 00000000 E     1		call	WriteString
+ 00000441  5A		     1		pop	edx
+ 00000442  E8 00000000 E		call Readchar
+					.IF ax == 1372h || ax == 1352h;要改成R之類的按鍵
+ 00000453  E8 00000000 E			call Clrscr
+ 00000458  66| C7 05				mov obsPos.X, 110
 	   00000010 R
 	   006E
- 0000043F  E9 FFFFFBE7				jmp Start_again
+ 00000461  E9 FFFFFBD7				jmp Start_again
 					.ENDIF
 
- 00000444  E8 00000000 E		call Crlf
+ 00000466  E8 00000000 E		call Crlf
 					;call fileAct	;測試寫檔讀檔
- 00000449			EndMain:
+ 0000046B			EndMain:
 					
 					exit
- 00000450			main ENDP
+ 00000472			main ENDP
 
- 00000450			fileAct PROC
+ 00000472			fileAct PROC
 					INVOKE CreateFile,
 						ADDR filename, 
 						GENERIC_WRITE, 
@@ -429,11 +972,11 @@ main.asm						     Page 1 - 1
 						OPEN_EXISTING, 
 						FILE_ATTRIBUTE_NORMAL, 
 						0
- 0000046C  A3 000001BF R		mov fileHandle,eax ; save file handle
+ 0000048E  A3 000001BB R		mov fileHandle,eax ; save file handle
 					.IF eax == INVALID_HANDLE_VALUE
- 00000476  BA 000001A0 R			mov edx,OFFSET errMsg ; Display error message
- 0000047B  E8 00000000 E			call WriteString
- 00000480  E9 0000009D				jmp QuitNow
+ 00000498  BA 0000019C R			mov edx,OFFSET errMsg ; Display error message
+ 0000049D  E8 00000000 E			call WriteString
+ 000004A2  E9 0000009D				jmp QuitNow
 					.ENDIF
 					INVOKE WriteFile, ; write text to file
 						fileHandle, ; file handle
@@ -451,11 +994,11 @@ main.asm						     Page 1 - 1
 						OPEN_EXISTING, 
 						FILE_ATTRIBUTE_NORMAL, 
 						0
- 000004C9  A3 000001BF R		mov fileHandle,eax ; save file handle
+ 000004EB  A3 000001BB R		mov fileHandle,eax ; save file handle
 					.IF eax == INVALID_HANDLE_VALUE
- 000004D3  BA 000001A0 R			mov edx,OFFSET errMsg ; Display error message
- 000004D8  E8 00000000 E			call WriteString
- 000004DD  EB 43				jmp QuitNow
+ 000004F5  BA 0000019C R			mov edx,OFFSET errMsg ; Display error message
+ 000004FA  E8 00000000 E			call WriteString
+ 000004FF  EB 43				jmp QuitNow
 					.ENDIF
 
 					INVOKE SetFilePointer,
@@ -468,89 +1011,65 @@ main.asm						     Page 1 - 1
 						ADDR bytesRead,		; bytes actually read
 						NULL			; NULL (0) for syn mode
 
- 0000050D  BA 0000019B R		mov  edx,OFFSET line
- 00000512  E8 00000000 E	    call WriteString
+ 0000052F  BA 00000197 R		mov  edx,OFFSET line
+ 00000534  E8 00000000 E	    call WriteString
 					INVOKE CloseHandle, fileHandle
- 00000522			QuitNow:
- 00000522  C3				ret
- 00000523			fileAct ENDP
+ 00000544			QuitNow:
+ 00000544  C3				ret
+ 00000545			fileAct ENDP
 
- 00000523			getScore PROC, 
+ 00000545			getScore PROC, 
 					;用經過的milliseconds當作分數
 					;讓數字從相同地方印出
 					INVOKE SetConsoleCursorPosition, 
 							outHandle, 
 							curPos
 					INVOKE GetTickCount ; get new tick count
- 00000539  3B 05 00000162 R		cmp eax,startTime	; lower than starting one
- 0000053F  72 35			jb errorTime
- 00000541  2B 05 00000162 R		sub eax,startTime	; get elapsed milliseconds
+ 0000055B  3B 05 00000162 R		cmp eax,startTime	; lower than starting one
+ 00000561  72 35			jb errorTime
+ 00000563  2B 05 00000162 R		sub eax,startTime	; get elapsed milliseconds
 					;除以1000讓數字變小
- 00000547  BA 00000000			mov edx, 0h			
- 0000054C  B9 000003E8			mov ecx, 03E8h
- 00000551  F7 F1			div ecx
- 00000553  E8 00000000 E		call WriteDec ; display it ;因為希望跳過障礙物加分，先用temp代替
- 00000558  A3 0000016A R		mov score, eax
+ 00000569  BA 00000000			mov edx, 0h			
+ 0000056E  B9 000003E8			mov ecx, 03E8h
+ 00000573  F7 F1			div ecx
+ 00000575  E8 00000000 E		call WriteDec ; display it
+ 0000057A  A3 0000016A R		mov score, eax
 					;15秒增加速度，到330秒極限
- 0000055D  BA 00000000			mov edx, 0h
- 00000562  B9 0000000F			mov ecx, 0fh
- 00000567  F7 F1			div ecx
+ 0000057F  BA 00000000			mov edx, 0h
+ 00000584  B9 0000000F			mov ecx, 0fh
+ 00000589  F7 F1			div ecx
 					.IF edx == 0
- 0000056D  83 2D 0000015E R			sub drawDelay, 1
+ 0000058F  83 2D 0000015E R			sub drawDelay, 1
 	   01
 					.ENDIF
 
- 00000574  EB 0C			jmp quit
- 00000576			errorTime:
+ 00000596  EB 0C			jmp quit
+ 00000598			errorTime:
 					mWrite "Reach Highest Goal!"
- 00000347		     1		.data		
- 00000347 52 65 61 63 68     1		??0004 BYTE "Reach Highest Goal!",0	
+ 00000BCE		     1		.data		
+ 00000BCE 52 65 61 63 68     1		??0004 BYTE "Reach Highest Goal!",0	
 	   20 48 69 67 68
 	   65 73 74 20 47
 	   6F 61 6C 21 00
- 00000576		     1		.code
- 00000576  52		     1		push	edx
- 00000577  BA 00000347 R     1		mov	edx,OFFSET ??0004
- 0000057C  E8 00000000 E     1		call	WriteString
- 00000581  5A		     1		pop	edx
- 00000582			quit:
- 00000582  C3				ret
- 00000583			getScore ENDP
+ 00000598		     1		.code
+ 00000598  52		     1		push	edx
+ 00000599  BA 00000BCE R     1		mov	edx,OFFSET ??0004
+ 0000059E  E8 00000000 E     1		call	WriteString
+ 000005A3  5A		     1		pop	edx
+ 000005A4			quit:
+ 000005A4  C3				ret
+ 000005A5			getScore ENDP
 
- 00000583			startScreen PROC
-					INVOKE SetConsoleCursorPosition, 
-						outHandle, 
-						startPos
-					mWrite "Press space to start"
- 0000035B		     1		.data		
- 0000035B 50 72 65 73 73     1		??0005 BYTE "Press space to start",0	
-	   20 73 70 61 63
-	   65 20 74 6F 20
-	   73 74 61 72 74
-	   00
- 00000594		     1		.code
- 00000594  52		     1		push	edx
- 00000595  BA 0000035B R     1		mov	edx,OFFSET ??0005
- 0000059A  E8 00000000 E     1		call	WriteString
- 0000059F  5A		     1		pop	edx
- 000005A0			notSpace:
- 000005A0  E8 00000000 E		call Readchar
-					.IF ax == 3920h
- 000005AB  E8 00000000 E			call Clrscr	;clear screen
- 000005B0  EB 02				jmp startGame
-					.ENDIF
- 000005B2  EB EC			jmp notSpace
- 000005B4			startGame:
- 000005B4  C3				ret
- 000005B5			startScreen ENDP
-
- 000005B5			role_move1 PROC
-				;切換馬腳的兩種動作的第一種
-				;erase old position
-					FORC num, <ABCDEFGHI>
+ 000005A5			startScreen PROC
+ 000005A5  66| 83 05			add rolePos.X, 17
+	   00000008 R 11
+ 000005AD  66| 83 05			add rolePos.Y, 3
+	   0000000A R 03
+					; Set the role to (28, 19):
+					FORC num, <123456789>
 						INVOKE WriteConsoleOutputAttribute, 
 							outHandle, 
-							ADDR attribute_black, 
+							ADDR attribute&num, 
 							10, 
 							rolePos, 
 							ADDR cellsWritten
@@ -581,53 +1100,100 @@ main.asm						     Page 1 - 1
  000007F7  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
 
-					;draw a new one
- 000007FE  66| 83 2D			sub rolePos.Y, 9
-	   0000000A R 09
-
-					FORC num, <ABCDJKLMN>
+					;畫出"Running"
+					FORC num, <IJKLMNOP>
 						INVOKE WriteConsoleOutputAttribute, 
 							outHandle, 
 							ADDR attribute&num, 
-							10, 
-							rolePos, 
+							75, 
+							startPos, 
 							ADDR cellsWritten
 						INVOKE WriteConsoleOutputCharacter, 
 							outHandle, 
 							ADDR buffer, 
-							10, 
-							rolePos, 
+							75, 
+							startPos, 
 							ADDR cellsWritten
-						inc rolePos.Y
+						inc startPos.Y
 					ENDM
- 00000840  66| FF 05	     1			inc rolePos.Y
-	   0000000A R
- 00000881  66| FF 05	     1			inc rolePos.Y
-	   0000000A R
- 000008C2  66| FF 05	     1			inc rolePos.Y
-	   0000000A R
- 00000903  66| FF 05	     1			inc rolePos.Y
-	   0000000A R
- 00000944  66| FF 05	     1			inc rolePos.Y
-	   0000000A R
- 00000985  66| FF 05	     1			inc rolePos.Y
-	   0000000A R
- 000009C6  66| FF 05	     1			inc rolePos.Y
-	   0000000A R
- 00000A07  66| FF 05	     1			inc rolePos.Y
-	   0000000A R
- 00000A48  66| FF 05	     1			inc rolePos.Y
-	   0000000A R
+ 00000838  66| FF 05	     1			inc startPos.Y
+	   0000001A R
+ 00000879  66| FF 05	     1			inc startPos.Y
+	   0000001A R
+ 000008BA  66| FF 05	     1			inc startPos.Y
+	   0000001A R
+ 000008FB  66| FF 05	     1			inc startPos.Y
+	   0000001A R
+ 0000093C  66| FF 05	     1			inc startPos.Y
+	   0000001A R
+ 0000097D  66| FF 05	     1			inc startPos.Y
+	   0000001A R
+ 000009BE  66| FF 05	     1			inc startPos.Y
+	   0000001A R
+ 000009FF  66| FF 05	     1			inc startPos.Y
+	   0000001A R
+ 00000A06  66| 83 05			add startPos.Y, 3
+	   0000001A R 03
+					;畫出"HOURSE"
+					FORC num, <QRTUV>
+						INVOKE WriteConsoleOutputAttribute, 
+							outHandle, 
+							ADDR attribute&num, 
+							101, 
+							startPos, 
+							ADDR cellsWritten
+						INVOKE WriteConsoleOutputCharacter, 
+							outHandle, 
+							ADDR buffer, 
+							101, 
+							startPos, 
+							ADDR cellsWritten
+						inc startPos.Y
+					ENDM
+ 00000A48  66| FF 05	     1			inc startPos.Y
+	   0000001A R
+ 00000A89  66| FF 05	     1			inc startPos.Y
+	   0000001A R
+ 00000ACA  66| FF 05	     1			inc startPos.Y
+	   0000001A R
+ 00000B0B  66| FF 05	     1			inc startPos.Y
+	   0000001A R
+ 00000B4C  66| FF 05	     1			inc startPos.Y
+	   0000001A R
+ 00000B53  66| 83 05			add startPos.Y, 4
+	   0000001A R 04
+ 00000B5B  66| 83 05			add startPos.X, 50
+	   00000018 R 32
+					INVOKE SetConsoleCursorPosition, 
+						outHandle, 
+						startPos
+					mWrite "Press ""space"" to start"
+ 00000BE2		     1		.data		
+ 00000BE2 50 72 65 73 73     1		??0005 BYTE "Press ""space"" to start",0	
+	   20 22 73 70 61
+	   63 65 22 20 74
+	   6F 20 73 74 61
+	   72 74 00
+ 00000B74		     1		.code
+ 00000B74  52		     1		push	edx
+ 00000B75  BA 00000BE2 R     1		mov	edx,OFFSET ??0005
+ 00000B7A  E8 00000000 E     1		call	WriteString
+ 00000B7F  5A		     1		pop	edx
+ 00000B80			notSpace:
+ 00000B80  E8 00000000 E		call Readchar
+					.IF ax == 3920h
+ 00000B8B  E8 00000000 E			call Clrscr	;clear screen
+ 00000B90  EB 02				jmp startGame
+					.ENDIF
+ 00000B92  EB EC			jmp notSpace
+ 00000B94			startGame:
+ 00000B94  C3				ret
+ 00000B95			startScreen ENDP
 
- 00000A4F  66| 83 2D			sub rolePos.Y, 9
-	   0000000A R 09
- 00000A57  C3				ret
- 00000A58			role_move1 ENDP
-
- 00000A58			role_move2 PROC
-;切換馬腳的兩種動作的第二種
+ 00000B95			role_move1 PROC
+				;切換馬腳的兩種動作的第一種
 				;erase old position
-					FORC num, <ABCDEFGHI>
+					FORC num, <123456789>
 						INVOKE WriteConsoleOutputAttribute, 
 							outHandle, 
 							ADDR attribute_black, 
@@ -642,30 +1208,30 @@ main.asm						     Page 1 - 1
 							ADDR cellsWritten
 						inc rolePos.Y
 					ENDM
- 00000A92  66| FF 05	     1			inc rolePos.Y
+ 00000BCF  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000AD3  66| FF 05	     1			inc rolePos.Y
+ 00000C10  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000B14  66| FF 05	     1			inc rolePos.Y
+ 00000C51  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000B55  66| FF 05	     1			inc rolePos.Y
+ 00000C92  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000B96  66| FF 05	     1			inc rolePos.Y
+ 00000CD3  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000BD7  66| FF 05	     1			inc rolePos.Y
+ 00000D14  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000C18  66| FF 05	     1			inc rolePos.Y
+ 00000D55  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000C59  66| FF 05	     1			inc rolePos.Y
+ 00000D96  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000C9A  66| FF 05	     1			inc rolePos.Y
+ 00000DD7  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
 
 					;draw a new one
- 00000CA1  66| 83 2D			sub rolePos.Y, 9
+ 00000DDE  66| 83 2D			sub rolePos.Y, 9
 	   0000000A R 09
 
-					FORC num, <ABCDEFGHI>
+					FORC num, <1234DEFGH>
 						INVOKE WriteConsoleOutputAttribute, 
 							outHandle, 
 							ADDR attribute&num, 
@@ -680,34 +1246,114 @@ main.asm						     Page 1 - 1
 							ADDR cellsWritten
 						inc rolePos.Y
 					ENDM
- 00000CE3  66| FF 05	     1			inc rolePos.Y
+ 00000E20  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000D24  66| FF 05	     1			inc rolePos.Y
+ 00000E61  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000D65  66| FF 05	     1			inc rolePos.Y
+ 00000EA2  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000DA6  66| FF 05	     1			inc rolePos.Y
+ 00000EE3  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000DE7  66| FF 05	     1			inc rolePos.Y
+ 00000F24  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000E28  66| FF 05	     1			inc rolePos.Y
+ 00000F65  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000E69  66| FF 05	     1			inc rolePos.Y
+ 00000FA6  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000EAA  66| FF 05	     1			inc rolePos.Y
+ 00000FE7  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000EEB  66| FF 05	     1			inc rolePos.Y
+ 00001028  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
 
- 00000EF2  66| 83 2D			sub rolePos.Y, 9
+ 0000102F  66| 83 2D			sub rolePos.Y, 9
 	   0000000A R 09
- 00000EFA  C3				ret
- 00000EFB			role_move2 ENDP
+ 00001037  C3				ret
+ 00001038			role_move1 ENDP
 
- 00000EFB			role_up PROC
+ 00001038			role_move2 PROC
+				;切換馬腳的兩種動作的第二種
+				;erase old position
+					FORC num, <123456789>
+						INVOKE WriteConsoleOutputAttribute, 
+							outHandle, 
+							ADDR attribute_black, 
+							10, 
+							rolePos, 
+							ADDR cellsWritten
+						INVOKE WriteConsoleOutputCharacter, 
+							outHandle, 
+							ADDR buffer, 
+							10, 
+							rolePos, 
+							ADDR cellsWritten
+						inc rolePos.Y
+					ENDM
+ 00001072  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+ 000010B3  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+ 000010F4  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+ 00001135  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+ 00001176  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+ 000011B7  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+ 000011F8  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+ 00001239  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+ 0000127A  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+
+					;draw a new one
+ 00001281  66| 83 2D			sub rolePos.Y, 9
+	   0000000A R 09
+
+					FORC num, <123456789>
+						INVOKE WriteConsoleOutputAttribute, 
+							outHandle, 
+							ADDR attribute&num, 
+							10, 
+							rolePos, 
+							ADDR cellsWritten
+						INVOKE WriteConsoleOutputCharacter, 
+							outHandle, 
+							ADDR buffer, 
+							10, 
+							rolePos, 
+							ADDR cellsWritten
+						inc rolePos.Y
+					ENDM
+ 000012C3  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+ 00001304  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+ 00001345  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+ 00001386  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+ 000013C7  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+ 00001408  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+ 00001449  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+ 0000148A  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+ 000014CB  66| FF 05	     1			inc rolePos.Y
+	   0000000A R
+
+ 000014D2  66| 83 2D			sub rolePos.Y, 9
+	   0000000A R 09
+ 000014DA  C3				ret
+ 000014DB			role_move2 ENDP
+
+ 000014DB			role_up PROC
 				;向上7格
 					;erase old position
-					FORC num, <ABCDEFGHI>
+					FORC num, <123456789>
 						INVOKE WriteConsoleOutputAttribute, 
 							outHandle, 
 							ADDR attribute_black, 
@@ -722,30 +1368,32 @@ main.asm						     Page 1 - 1
 							ADDR cellsWritten
 						inc rolePos.Y
 					ENDM
- 00000F35  66| FF 05	     1			inc rolePos.Y
+ 00001515  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000F76  66| FF 05	     1			inc rolePos.Y
+ 00001556  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000FB7  66| FF 05	     1			inc rolePos.Y
+ 00001597  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00000FF8  66| FF 05	     1			inc rolePos.Y
+ 000015D8  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00001039  66| FF 05	     1			inc rolePos.Y
+ 00001619  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000107A  66| FF 05	     1			inc rolePos.Y
+ 0000165A  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000010BB  66| FF 05	     1			inc rolePos.Y
+ 0000169B  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000010FC  66| FF 05	     1			inc rolePos.Y
+ 000016DC  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000113D  66| FF 05	     1			inc rolePos.Y
+ 0000171D  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
 
 					;draw a new one
- 00001144  66| 83 2D			sub rolePos.Y, 16
-	   0000000A R 10
+ 00001724  66| 83 2D			sub rolePos.Y, 15
+	   0000000A R 0F
+ 0000172C  66| FF 0D			dec rolePos.Y
+	   0000000A R
 
-					FORC num, <ABCDEFGHI>
+					FORC num, <123456789>
 						INVOKE WriteConsoleOutputAttribute, 
 							outHandle, 
 							ADDR attribute&num, 
@@ -760,34 +1408,34 @@ main.asm						     Page 1 - 1
 							ADDR cellsWritten
 						inc rolePos.Y
 					ENDM
- 00001186  66| FF 05	     1			inc rolePos.Y
+ 0000176D  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000011C7  66| FF 05	     1			inc rolePos.Y
+ 000017AE  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00001208  66| FF 05	     1			inc rolePos.Y
+ 000017EF  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00001249  66| FF 05	     1			inc rolePos.Y
+ 00001830  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000128A  66| FF 05	     1			inc rolePos.Y
+ 00001871  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000012CB  66| FF 05	     1			inc rolePos.Y
+ 000018B2  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000130C  66| FF 05	     1			inc rolePos.Y
+ 000018F3  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000134D  66| FF 05	     1			inc rolePos.Y
+ 00001934  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000138E  66| FF 05	     1			inc rolePos.Y
+ 00001975  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
 
- 00001395  66| 83 2D			sub rolePos.Y, 9
+ 0000197C  66| 83 2D			sub rolePos.Y, 9
 	   0000000A R 09
- 0000139D  C3				ret
- 0000139E			role_up ENDP
+ 00001984  C3				ret
+ 00001985			role_up ENDP
 
- 0000139E			role_down PROC
+ 00001985			role_down PROC
 				;向下一格
 					;erase old position
-					FORC num, <ABCDEFGHI>
+					FORC num, <123456789>
 						INVOKE WriteConsoleOutputAttribute, 
 							outHandle, 
 							ADDR attribute_black, 
@@ -802,32 +1450,32 @@ main.asm						     Page 1 - 1
 							ADDR cellsWritten
 						inc rolePos.Y
 					ENDM
- 000013D8  66| FF 05	     1			inc rolePos.Y
+ 000019BF  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00001419  66| FF 05	     1			inc rolePos.Y
+ 00001A00  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000145A  66| FF 05	     1			inc rolePos.Y
+ 00001A41  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000149B  66| FF 05	     1			inc rolePos.Y
+ 00001A82  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000014DC  66| FF 05	     1			inc rolePos.Y
+ 00001AC3  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000151D  66| FF 05	     1			inc rolePos.Y
+ 00001B04  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000155E  66| FF 05	     1			inc rolePos.Y
+ 00001B45  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 0000159F  66| FF 05	     1			inc rolePos.Y
+ 00001B86  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000015E0  66| FF 05	     1			inc rolePos.Y
+ 00001BC7  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
 
 					;draw a new one
- 000015E7  66| 83 2D			sub rolePos.Y, 9
+ 00001BCE  66| 83 2D			sub rolePos.Y, 9
 	   0000000A R 09
- 000015EF  66| FF 05			inc rolePos.Y
+ 00001BD6  66| FF 05			inc rolePos.Y
 	   0000000A R
 
-					FORC num, <ABCDEFGHI>
+					FORC num, <123456789>
 						INVOKE WriteConsoleOutputAttribute, 
 							outHandle, 
 							ADDR attribute&num, 
@@ -842,31 +1490,31 @@ main.asm						     Page 1 - 1
 							ADDR cellsWritten
 						inc rolePos.Y
 					ENDM
- 00001630  66| FF 05	     1			inc rolePos.Y
+ 00001C17  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00001671  66| FF 05	     1			inc rolePos.Y
+ 00001C58  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000016B2  66| FF 05	     1			inc rolePos.Y
+ 00001C99  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000016F3  66| FF 05	     1			inc rolePos.Y
+ 00001CDA  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00001734  66| FF 05	     1			inc rolePos.Y
+ 00001D1B  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00001775  66| FF 05	     1			inc rolePos.Y
+ 00001D5C  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000017B6  66| FF 05	     1			inc rolePos.Y
+ 00001D9D  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 000017F7  66| FF 05	     1			inc rolePos.Y
+ 00001DDE  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
- 00001838  66| FF 05	     1			inc rolePos.Y
+ 00001E1F  66| FF 05	     1			inc rolePos.Y
 	   0000000A R
 
- 0000183F  66| 83 2D			sub rolePos.Y, 9
+ 00001E26  66| 83 2D			sub rolePos.Y, 9
 	   0000000A R 09
- 00001847  C3				ret
- 00001848			role_down ENDP
+ 00001E2E  C3				ret
+ 00001E2F			role_down ENDP
 
- 00001848			move_obstacle PROC
+ 00001E2F			move_obstacle PROC
 					;draw obstacle with color red
 					FORC num, <ABC>
 						INVOKE WriteConsoleOutputAttribute, 
@@ -883,16 +1531,16 @@ main.asm						     Page 1 - 1
 							ADDR cellsWritten
 						dec obsPos.Y			;每次畫一列，往上畫
 					ENDM
- 00001882  66| FF 0D	     1			dec obsPos.Y			;每次畫一列，往上畫
+ 00001E69  66| FF 0D	     1			dec obsPos.Y			;每次畫一列，往上畫
 	   00000012 R
- 000018C3  66| FF 0D	     1			dec obsPos.Y			;每次畫一列，往上畫
+ 00001EAA  66| FF 0D	     1			dec obsPos.Y			;每次畫一列，往上畫
 	   00000012 R
- 00001904  66| FF 0D	     1			dec obsPos.Y			;每次畫一列，往上畫
+ 00001EEB  66| FF 0D	     1			dec obsPos.Y			;每次畫一列，往上畫
 	   00000012 R
 					;back to previous position Y回到第一列，X倒退三行
- 0000190B  66| 83 05			add obsPos.X, 3
+ 00001EF2  66| 83 05			add obsPos.X, 3
 	   00000010 R 03
- 00001913  66| 83 05			add obsPos.Y, 3
+ 00001EFA  66| 83 05			add obsPos.Y, 3
 	   00000012 R 03
 					;erase obstacle 
 					FORC num, <ABC>
@@ -910,20 +1558,20 @@ main.asm						     Page 1 - 1
 							ADDR cellsWritten
 						dec obsPos.Y
 					ENDM
- 00001955  66| FF 0D	     1			dec obsPos.Y
+ 00001F3C  66| FF 0D	     1			dec obsPos.Y
 	   00000012 R
- 00001996  66| FF 0D	     1			dec obsPos.Y
+ 00001F7D  66| FF 0D	     1			dec obsPos.Y
 	   00000012 R
- 000019D7  66| FF 0D	     1			dec obsPos.Y
+ 00001FBE  66| FF 0D	     1			dec obsPos.Y
 	   00000012 R
 					;to the next position Y回到第一列，X前進六行
- 000019DE  66| 83 2D			sub obsPos.X, 6
+ 00001FC5  66| 83 2D			sub obsPos.X, 6
 	   00000010 R 06
- 000019E6  66| 83 05			add obsPos.Y, 3
+ 00001FCD  66| 83 05			add obsPos.Y, 3
 	   00000012 R 03
 					;若障礙物到達末端，從頭開始
 					.IF obsPos.X == 5
- 000019FC  66| 83 05				add obsPos.X, 3
+ 00001FE3  66| 83 05				add obsPos.X, 3
 	   00000010 R 03
 						FORC num, <ABC>
 						INVOKE WriteConsoleOutputAttribute, 
@@ -939,39 +1587,39 @@ main.asm						     Page 1 - 1
 							obsPos, 
 							ADDR cellsWritten
 						dec obsPos.Y
-						ENDM
- 00001A3E  66| FF 0D	     1			dec obsPos.Y
+					ENDM
+ 00002025  66| FF 0D	     1			dec obsPos.Y
 	   00000012 R
- 00001A7F  66| FF 0D	     1			dec obsPos.Y
+ 00002066  66| FF 0D	     1			dec obsPos.Y
 	   00000012 R
- 00001AC0  66| FF 0D	     1			dec obsPos.Y
+ 000020A7  66| FF 0D	     1			dec obsPos.Y
 	   00000012 R
-						;生成隨機顏色
- 00001AC7  E8 00000000 E			call Randomize ;初始化
- 00001ACC  E8 00000000 E			call Random32 ;生成隨機正整數到eax
- 00001AD1  33 D2				xor edx, edx ;餘數歸零
- 00001AD3  F7 35 0000017E R			div range ;0到7隨機數
- 00001AD9  66| 8B 04 55				mov ax, attribute0[edx*2] ; 根據隨機數選擇對應的顏色
-	   000002FD R
+					;生成隨機顏色
+ 000020AE  E8 00000000 E			call Randomize ;初始化
+ 000020B3  E8 00000000 E			call Random32 ;生成隨機正整數到eax
+ 000020B8  33 D2				xor edx, edx ;餘數歸零
+ 000020BA  F7 35 0000017A R			div range ;0到7隨機數
+ 000020C0  66| 8B 04 55				mov ax, attribute0[edx*2] ; 根據隨機數選擇對應的顏色
+	   000002F9 R
 						FORC num, <024>
 							mov attribute[&num], ax ; 設定顏色
 						ENDM
- 00001AE1  66| A3	     1				mov attribute[0], ax ; 設定顏色
+ 000020C8  66| A3	     1				mov attribute[0], ax ; 設定顏色
+	   000002F3 R
+ 000020CE  66| A3	     1				mov attribute[2], ax ; 設定顏色
+	   000002F5 R
+ 000020D4  66| A3	     1				mov attribute[4], ax ; 設定顏色
 	   000002F7 R
- 00001AE7  66| A3	     1				mov attribute[2], ax ; 設定顏色
-	   000002F9 R
- 00001AED  66| A3	     1				mov attribute[4], ax ; 設定顏色
-	   000002FB R
- 00001AF3  66| C7 05			mov obsPos.X, 110 
+ 000020DA  66| C7 05			mov obsPos.X, 110 
 	   00000010 R
 	   006E
- 00001AFC  66| 83 05			add obsPos.Y, 3
+ 000020E3  66| 83 05			add obsPos.Y, 3
 	   00000012 R 03
 					.ENDIF
- 00001B04  C3				ret
- 00001B05			move_obstacle ENDP
+ 000020EB  C3				ret
+ 000020EC			move_obstacle ENDP
 				END main
-Microsoft (R) Macro Assembler Version 14.29.30152.0	    12/21/23 22:24:33
+Microsoft (R) Macro Assembler Version 14.29.30152.0	    12/21/23 22:44:51
 main.asm						     Symbols 2 - 1
 
 
@@ -1083,8 +1731,8 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 00000370 Para	  Public  'DATA'	
-_TEXT  . . . . . . . . . . . . .	32 Bit	 00001B05 Para	  Public  'CODE'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000BF9 Para	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 000020EC Para	  Public  'CODE'	
 
 
 Procedures, parameters, and locals:
@@ -1191,27 +1839,27 @@ WriteStackFrame  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External
 WriteString  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteToFile  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
 WriteWindowsMsg  . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
-fileAct  . . . . . . . . . . . .	P Near	 00000450 _TEXT	Length= 000000D3 Public STDCALL
-  QuitNow  . . . . . . . . . . .	L Near	 00000522 _TEXT	
-getScore . . . . . . . . . . . .	P Near	 00000523 _TEXT	Length= 00000060 Public STDCALL
-  errorTime  . . . . . . . . . .	L Near	 00000576 _TEXT	
-  quit . . . . . . . . . . . . .	L Near	 00000582 _TEXT	
-main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000450 Public STDCALL
-  Start_again  . . . . . . . . .	L Near	 0000002B _TEXT	
-  PLAY . . . . . . . . . . . . .	L Near	 00000309 _TEXT	
-  spaceNotPressed  . . . . . . .	L Near	 00000321 _TEXT	
-  END_PLAY . . . . . . . . . . .	L Near	 00000381 _TEXT	
-  EndMain  . . . . . . . . . . .	L Near	 00000449 _TEXT	
-move_obstacle  . . . . . . . . .	P Near	 00001848 _TEXT	Length= 000002BD Public STDCALL
+fileAct  . . . . . . . . . . . .	P Near	 00000472 _TEXT	Length= 000000D3 Public STDCALL
+  QuitNow  . . . . . . . . . . .	L Near	 00000544 _TEXT	
+getScore . . . . . . . . . . . .	P Near	 00000545 _TEXT	Length= 00000060 Public STDCALL
+  errorTime  . . . . . . . . . .	L Near	 00000598 _TEXT	
+  quit . . . . . . . . . . . . .	L Near	 000005A4 _TEXT	
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000472 Public STDCALL
+  Start_again  . . . . . . . . .	L Near	 0000003D _TEXT	
+  PLAY . . . . . . . . . . . . .	L Near	 00000325 _TEXT	
+  spaceNotPressed  . . . . . . .	L Near	 0000033D _TEXT	
+  END_PLAY . . . . . . . . . . .	L Near	 0000039D _TEXT	
+  EndMain  . . . . . . . . . . .	L Near	 0000046B _TEXT	
+move_obstacle  . . . . . . . . .	P Near	 00001E2F _TEXT	Length= 000002BD Public STDCALL
 printf . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
-role_down  . . . . . . . . . . .	P Near	 0000139E _TEXT	Length= 000004AA Public STDCALL
-role_move1 . . . . . . . . . . .	P Near	 000005B5 _TEXT	Length= 000004A3 Public STDCALL
-role_move2 . . . . . . . . . . .	P Near	 00000A58 _TEXT	Length= 000004A3 Public STDCALL
-role_up  . . . . . . . . . . . .	P Near	 00000EFB _TEXT	Length= 000004A3 Public STDCALL
+role_down  . . . . . . . . . . .	P Near	 00001985 _TEXT	Length= 000004AA Public STDCALL
+role_move1 . . . . . . . . . . .	P Near	 00000B95 _TEXT	Length= 000004A3 Public STDCALL
+role_move2 . . . . . . . . . . .	P Near	 00001038 _TEXT	Length= 000004A3 Public STDCALL
+role_up  . . . . . . . . . . . .	P Near	 000014DB _TEXT	Length= 000004AA Public STDCALL
 scanf  . . . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
-startScreen  . . . . . . . . . .	P Near	 00000583 _TEXT	Length= 00000032 Public STDCALL
-  notSpace . . . . . . . . . . .	L Near	 000005A0 _TEXT	
-  startGame  . . . . . . . . . .	L Near	 000005B4 _TEXT	
+startScreen  . . . . . . . . . .	P Near	 000005A5 _TEXT	Length= 000005F0 Public STDCALL
+  notSpace . . . . . . . . . . .	L Near	 00000B80 _TEXT	
+  startGame  . . . . . . . . . .	L Near	 00000B94 _TEXT	
 wsprintfA  . . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External C
 
 
@@ -1219,12 +1867,12 @@ Symbols:
 
                 N a m e                 Type     Value    Attr
 
-??0000 . . . . . . . . . . . . .	Byte	 0000030D _DATA	
-??0001 . . . . . . . . . . . . .	Byte	 00000314 _DATA	
-??0002 . . . . . . . . . . . . .	Byte	 0000031E _DATA	
-??0003 . . . . . . . . . . . . .	Byte	 0000032D _DATA	
-??0004 . . . . . . . . . . . . .	Byte	 00000347 _DATA	
-??0005 . . . . . . . . . . . . .	Byte	 0000035B _DATA	
+??0000 . . . . . . . . . . . . .	Byte	 00000B83 _DATA	
+??0001 . . . . . . . . . . . . .	Byte	 00000B8A _DATA	
+??0002 . . . . . . . . . . . . .	Byte	 00000B94 _DATA	
+??0003 . . . . . . . . . . . . .	Byte	 00000BA3 _DATA	
+??0004 . . . . . . . . . . . . .	Byte	 00000BCE _DATA	
+??0005 . . . . . . . . . . . . .	Byte	 00000BE2 _DATA	
 @CodeSize  . . . . . . . . . . .	Number	 00000000h   
 @DataSize  . . . . . . . . . . .	Number	 00000000h   
 @Interface . . . . . . . . . . .	Number	 00000003h   
@@ -1435,39 +2083,52 @@ VK_UP  . . . . . . . . . . . . .	Number	 00000026h
 WINDOW_BUFFER_SIZE_EVENT . . . .	Number	 00000004h   
 WriteConsoleOutputCharacter  . .	Text   	 WriteConsoleOutputCharacterA
 WriteConsole . . . . . . . . . .	Text   	 WriteConsoleA
-attribute0 . . . . . . . . . . .	Word	 000002FD _DATA	
-attributeA . . . . . . . . . . .	Word	 000001CB _DATA	
-attributeB . . . . . . . . . . .	Word	 000001DF _DATA	
-attributeC . . . . . . . . . . .	Word	 000001F3 _DATA	
-attributeD . . . . . . . . . . .	Word	 00000207 _DATA	
-attributeE . . . . . . . . . . .	Word	 0000021B _DATA	
-attributeF . . . . . . . . . . .	Word	 0000022F _DATA	
-attributeG . . . . . . . . . . .	Word	 00000243 _DATA	
-attributeH . . . . . . . . . . .	Word	 00000257 _DATA	
-attributeI . . . . . . . . . . .	Word	 0000026B _DATA	
-attributeJ . . . . . . . . . . .	Word	 0000027F _DATA	
-attributeK . . . . . . . . . . .	Word	 00000293 _DATA	
-attributeL . . . . . . . . . . .	Word	 000002A7 _DATA	
-attributeM . . . . . . . . . . .	Word	 000002BB _DATA	
-attributeN . . . . . . . . . . .	Word	 000002CF _DATA	
-attribute_black  . . . . . . . .	Word	 000002E3 _DATA	
+attribute0 . . . . . . . . . . .	Word	 000002F9 _DATA	
+attribute1 . . . . . . . . . . .	Word	 000001C7 _DATA	
+attribute2 . . . . . . . . . . .	Word	 000001DB _DATA	
+attribute3 . . . . . . . . . . .	Word	 000001EF _DATA	
+attribute4 . . . . . . . . . . .	Word	 00000203 _DATA	
+attribute5 . . . . . . . . . . .	Word	 00000217 _DATA	
+attribute6 . . . . . . . . . . .	Word	 0000022B _DATA	
+attribute7 . . . . . . . . . . .	Word	 0000023F _DATA	
+attribute8 . . . . . . . . . . .	Word	 00000253 _DATA	
+attribute9 . . . . . . . . . . .	Word	 00000267 _DATA	
+attributeD . . . . . . . . . . .	Word	 0000027B _DATA	
+attributeE . . . . . . . . . . .	Word	 0000028F _DATA	
+attributeF . . . . . . . . . . .	Word	 000002A3 _DATA	
+attributeG . . . . . . . . . . .	Word	 000002B7 _DATA	
+attributeH . . . . . . . . . . .	Word	 000002CB _DATA	
+attributeI . . . . . . . . . . .	Word	 00000309 _DATA	
+attributeJ . . . . . . . . . . .	Word	 0000039D _DATA	
+attributeK . . . . . . . . . . .	Word	 00000429 _DATA	
+attributeL . . . . . . . . . . .	Word	 000004BB _DATA	
+attributeM . . . . . . . . . . .	Word	 00000551 _DATA	
+attributeN . . . . . . . . . . .	Word	 000005E3 _DATA	
+attributeO . . . . . . . . . . .	Word	 00000679 _DATA	
+attributeP . . . . . . . . . . .	Word	 0000070F _DATA	
+attributeQ . . . . . . . . . . .	Word	 000007A5 _DATA	
+attributeR . . . . . . . . . . .	Word	 0000086F _DATA	
+attributeT . . . . . . . . . . .	Word	 0000092F _DATA	
+attributeU . . . . . . . . . . .	Word	 000009F9 _DATA	
+attributeV . . . . . . . . . . .	Word	 00000AB9 _DATA	
+attribute_black  . . . . . . . .	Word	 000002DF _DATA	
 attributes . . . . . . . . . . .	Word	 00000080 _DATA	
-attribute  . . . . . . . . . . .	Word	 000002F7 _DATA	
+attribute  . . . . . . . . . . .	Word	 000002F3 _DATA	
 black  . . . . . . . . . . . . .	Number	 00000000h   
 blue . . . . . . . . . . . . . .	Number	 00000001h   
 brown  . . . . . . . . . . . . .	Number	 00000006h   
 buffer . . . . . . . . . . . . .	Byte	 0000001C _DATA	
-bytesRead  . . . . . . . . . . .	DWord	 000001C7 _DATA	
-bytesWritten . . . . . . . . . .	DWord	 000001C3 _DATA	
+bytesRead  . . . . . . . . . . .	DWord	 000001C3 _DATA	
+bytesWritten . . . . . . . . . .	DWord	 000001BF _DATA	
 cellsWritten . . . . . . . . . .	DWord	 00000004 _DATA	
-curInfo  . . . . . . . . . . . .	CONSOLE_CURSOR_INFO  00000176 _DATA	
+curInfo  . . . . . . . . . . . .	CONSOLE_CURSOR_INFO  00000172 _DATA	
 curPos . . . . . . . . . . . . .	COORD	 00000166 _DATA	
 cyan . . . . . . . . . . . . . .	Number	 00000003h   
 drawDelay  . . . . . . . . . . .	DWord	 0000015E _DATA	
-errMsg . . . . . . . . . . . . .	Byte	 000001A0 _DATA	
+errMsg . . . . . . . . . . . . .	Byte	 0000019C _DATA	
 exit . . . . . . . . . . . . . .	Text   	 INVOKE ExitProcess,0
-fileHandle . . . . . . . . . . .	DWord	 000001BF _DATA	
-filename . . . . . . . . . . . .	Byte	 000001B5 _DATA	
+fileHandle . . . . . . . . . . .	DWord	 000001BB _DATA	
+filename . . . . . . . . . . . .	Byte	 000001B1 _DATA	
 gray . . . . . . . . . . . . . .	Number	 00000008h   
 green  . . . . . . . . . . . . .	Number	 00000002h   
 groundPos  . . . . . . . . . . .	COORD	 0000000C _DATA	
@@ -1477,23 +2138,22 @@ lightGray  . . . . . . . . . . .	Number	 00000007h
 lightGreen . . . . . . . . . . .	Number	 0000000Ah   
 lightMagenta . . . . . . . . . .	Number	 0000000Dh   
 lightRed . . . . . . . . . . . .	Number	 0000000Ch   
-lineSize . . . . . . . . . . . .	DWord	 0000019C _DATA	
-line . . . . . . . . . . . . . .	Byte	 0000019B _DATA	
+lineSize . . . . . . . . . . . .	DWord	 00000198 _DATA	
+line . . . . . . . . . . . . . .	Byte	 00000197 _DATA	
 magenta  . . . . . . . . . . . .	Number	 00000005h   
 obsBound . . . . . . . . . . . .	COORD	 00000014 _DATA	
 obsPos . . . . . . . . . . . . .	COORD	 00000010 _DATA	
 outHandle  . . . . . . . . . . .	DWord	 00000000 _DATA	
-range  . . . . . . . . . . . . .	DWord	 0000017E _DATA	
+range  . . . . . . . . . . . . .	DWord	 0000017A _DATA	
 red  . . . . . . . . . . . . . .	Number	 00000004h   
 rolePos  . . . . . . . . . . . .	COORD	 00000008 _DATA	
 role_up_Y  . . . . . . . . . . .	Number	 00000010h   
-scoreSize  . . . . . . . . . . .	DWord	 00000172 _DATA	
+scoreSize  . . . . . . . . . . .	DWord	 0000016E _DATA	
 score  . . . . . . . . . . . . .	DWord	 0000016A _DATA	
 startPos . . . . . . . . . . . .	COORD	 00000018 _DATA	
 startTime  . . . . . . . . . . .	DWord	 00000162 _DATA	
-temp . . . . . . . . . . . . . .	DWord	 0000016E _DATA	
-testMsg  . . . . . . . . . . . .	Byte	 00000182 _DATA	
-testSize . . . . . . . . . . . .	DWord	 00000197 _DATA	
+testMsg  . . . . . . . . . . . .	Byte	 0000017E _DATA	
+testSize . . . . . . . . . . . .	DWord	 00000193 _DATA	
 titleStr . . . . . . . . . . . .	Byte	 0000014E _DATA	
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
 wsprintf . . . . . . . . . . . .	Text   	 wsprintfA

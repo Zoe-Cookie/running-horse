@@ -19,7 +19,7 @@ rolePos COORD <11,16>   ;initialize position of role
 groundPos COORD <11,25> ;initialize position of ground
 obsPos COORD <110,24>	;initialize position of obstacle
 obsBound COORD <11,24>
-startPos COORD <55,15>	;封面的字
+startPos COORD <0,2>	;封面的字
 buffer BYTE Ground DUP(44h)							;character types
 attributes WORD 0Eh, 0h, Ground DUP(22h), 11h		;colors
 titleStr BYTE "小馬快快跑",0
@@ -28,7 +28,6 @@ startTime DWORD ?   ;
 curPos COORD <104,1>
 role_up_Y = 16		;用於判斷有沒有跳起來
 score DWORD ?
-temp DWORD ?
 scoreSize DWORD ($-score)
 curInfo CONSOLE_CURSOR_INFO <1, FALSE>
 range DWORD 8
@@ -45,27 +44,88 @@ bytesWritten DWORD ? ; number of bytes written
 bytesRead DWORD ? ; number of bytes read
 
 ;小馬顏色
-attributeA WORD 6 DUP(0h), 66h, 0h, 66h, 0h
-attributeB WORD 6 DUP(0h), 66h, 2 DUP(88h), 0h
-attributeC WORD 5 DUP(0h), 88h, 11h, 66h, 11h, 0h
-attributeD WORD 5 DUP(0h), 66h, 4 DUP(66h)
-attributeE WORD 88h, 4 DUP(0h), 88h,  2 DUP(66h), 2 DUP(0h)
-attributeF WORD 2 DUP(88h), 6 DUP(66h), 2 DUP(0h)
-attributeG WORD 2 DUP(0h), 7 DUP(66h), 0h
-attributeH WORD 2 DUP(0h), 66h, 3 DUP(0h), 66h, 0h, 77h, 0h
-attributeI WORD 2 DUP(0h), 77h, 3 DUP(0h), 77h, 3 DUP(0h)
+attribute1 WORD 6 DUP(0h), 66h, 0h, 66h, 0h
+attribute2 WORD 6 DUP(0h), 66h, 2 DUP(88h), 0h
+attribute3 WORD 5 DUP(0h), 88h, 11h, 66h, 11h, 0h
+attribute4 WORD 5 DUP(0h), 66h, 4 DUP(66h)
+attribute5 WORD 88h, 4 DUP(0h), 88h,  2 DUP(66h), 2 DUP(0h)
+attribute6 WORD 2 DUP(88h), 6 DUP(66h), 2 DUP(0h)
+attribute7 WORD 2 DUP(0h), 7 DUP(66h), 0h
+attribute8 WORD 2 DUP(0h), 66h, 3 DUP(0h), 66h, 0h, 77h, 0h
+attribute9 WORD 2 DUP(0h), 77h, 3 DUP(0h), 77h, 3 DUP(0h)
 ;跑起來的小馬顏色
-attributeJ WORD 5 DUP(0h), 88h,  2 DUP(66h), 2 DUP(0h)
-attributeK WORD 2 DUP(88h), 6 DUP(66h), 2 DUP(0h)
-attributeL WORD 2 DUP(0h), 6 DUP(66h), 2 DUP(0h)
-attributeM WORD 0h, 77h, 66h, 4 DUP(0h), 66h, 2 DUP(0h)
-attributeN WORD 3 DUP(0h), 4 DUP(0h), 77h, 2 DUP(0h)
+attributeD WORD 5 DUP(0h), 88h,  2 DUP(66h), 2 DUP(0h)
+attributeE WORD 2 DUP(88h), 6 DUP(66h), 2 DUP(0h)
+attributeF WORD 2 DUP(0h), 6 DUP(66h), 2 DUP(0h)
+attributeG WORD 0h, 77h, 66h, 4 DUP(0h), 66h, 2 DUP(0h)
+attributeH WORD 3 DUP(0h), 4 DUP(0h), 77h, 2 DUP(0h)
 ;覆蓋小馬顏色
 attribute_black WORD 10 DUP(0h)
 
 ;障礙物顏色
 attribute WORD 3 DUP(44h)
 attribute0 WORD 44h, 11h, 22h, 33h, 55h, 66h, 77h, 88h
+
+;Running 75個
+attributeI WORD 10 DUP(0h), 7 DUP(11h)  
+		   WORD 36 DUP(0h), 2 DUP(11h), 19 DUP(0h)
+attributeJ WORD 10 DUP(0h), 2 DUP(11h), 5 DUP(0h), 2 DUP(11h), 51 DUP(0h)
+attributeK WORD 10 DUP(0h), 7 DUP(11h)
+		   WORD 5 DUP(0h), 2 DUP(11h), 3 DUP(0h), 2 DUP(11h)
+		   WORD 4 DUP(0h), 2 DUP(11h), 0h, 3 DUP(11h)
+		   WORD 4 DUP(0h), 2 DUP(11h), 0h, 3 DUP(11h)
+		   WORD 4 DUP(0h), 2 DUP(11h)
+		   WORD 2 DUP(0h), 2 DUP(11h), 0h, 3 DUP(11h)
+		   WORD 6 DUP(0h), 4 DUP(11h)
+attributeL WORD 10 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h) 
+		   WORD 4 DUP(0h), 2 DUP(11h), 3 DUP(0h), 2 DUP(11h)
+		   WORD 4 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h)
+		   WORD 2 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h)
+		   WORD 2 DUP(0h), 2 DUP(11h)
+		   WORD 2 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h)
+		   WORD 2 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h)
+attributeM WORD 10 DUP(0h), 2 DUP(11h), 6 DUP(0h), 2 DUP(11h)
+		   WORD 4 DUP(0h), 3 DUP(11h), 2 DUP(0h), 2 DUP(11h)
+		   WORD 2 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h)
+		   WORD 2 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h)
+		   WORD 2 DUP(0h), 2 DUP(11h)
+		   WORD 2 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h)
+		   WORD 4 DUP(0h), 4 DUP(11h)
+attributeN WORD 73 DUP(0h), 2 DUP(11h)
+attributeO WORD 67 DUP(0h), 2 DUP(11h), 4 DUP(0h), 2 DUP(11h)
+attributeP WORD 69 DUP(0h), 4 DUP(11h), 2 DUP(0h)
+
+;H0URSE 101格
+attributeQ WORD 43 DUP(0h), 2 DUP(44h), 4 DUP(0h), 2 DUP(44h)
+		   WORD 4 DUP(0h), 4 DUP(44h)
+		   WORD 4 DUP(0h), 2 DUP(44h), 5 DUP(0h), 2 DUP(44h)
+		   WORD 2 DUP(0h), 7 DUP(44h)
+		   WORD 6 DUP(0h), 4 DUP(44h)
+		   WORD 3 DUP(0h), 7 DUP(44h)
+attributeR WORD 43 DUP(0h), 2 DUP(44h), 4 DUP(0h), 2 DUP(44h)
+		   WORD 2 DUP(0h), 2 DUP(44h), 4 DUP(0h), 2 DUP(44h)
+		   WORD 2 DUP(0h), 2 DUP(44h), 5 DUP(0h), 2 DUP(44h)
+		   WORD 2 DUP(0h), 2 DUP(44h), 5 DUP(0h), 2 DUP(44h)
+		   WORD 2 DUP(0h), 2 DUP(44h)
+		   WORD 7 DUP(0h), 2 DUP(44h)
+attributeT WORD 43 DUP(0h), 8 DUP(44h)
+		   WORD 2 DUP(0h), 2 DUP(44h), 4 DUP(0h), 2 DUP(44h)
+		   WORD 2 DUP(0h), 2 DUP(44h), 5 DUP(0h), 2 DUP(44h)
+		   WORD 2 DUP(0h), 7 DUP(44h)
+		   WORD 6 DUP(0h), 3 DUP(44h)
+		   WORD 4 DUP(0h), 7 DUP(44h)
+attributeU WORD 43 DUP(0h), 2 DUP(44h), 4 DUP(0h), 2 DUP(44h)
+		   WORD 2 DUP(0h), 2 DUP(44h), 4 DUP(0h), 2 DUP(44h)
+		   WORD 3 DUP(0h), 2 DUP(44h), 3 DUP(0h), 2 DUP(44h)
+		   WORD 3 DUP(0h), 2 DUP(44h), 4 DUP(0h), 2 DUP(44h)
+		   WORD 8 DUP(0h), 2 DUP(44h)
+		   WORD 2 DUP(0h), 2 DUP(44h)
+attributeV WORD 43 DUP(0h), 2 DUP(44h), 4 DUP(0h), 2 DUP(44h)
+		   WORD 4 DUP(0h), 4 DUP(44h)
+		   WORD 7 DUP(0h), 3 DUP(44h)
+		   WORD 5 DUP(0h), 2 DUP(44h), 6 DUP(0h), 2 DUP(44h)
+		   WORD 2 DUP(0h), 4 DUP(44h)
+		   WORD 4 DUP(0h), 7 DUP(44h)
 
 .code
 main PROC
@@ -82,10 +142,12 @@ main PROC
 	;開始畫面
 	call startScreen
 	
-
+	;角色位置重置
+	mov rolePos.X, 11
+	mov rolePos.Y, 16
 Start_again:
-	; Set the role to (11,10):
-	FORC num, <ABCDEFGHI>
+	; Set the role to (11,16):
+	FORC num, <123456789>
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
 			ADDR attribute&num, 
@@ -117,8 +179,8 @@ Start_again:
 			Ground, 
 			groundPos, 
 			ADDR cellsWritten
-
-	mov curPos.X, 104 ;重新開始分數的位置才不會跑掉
+	mov drawDelay, 150	;重新設定速度
+	mov curPos.X, 104	;重新開始分數的位置才不會跑掉
 	INVOKE SetConsoleCursorPosition, 
 			outHandle, 
 			curPos
@@ -140,6 +202,8 @@ Start_again:
 	
 ;Start moving	
 PLAY:
+	
+
 	;用ReadKey可以不用等待讀取輸入，但輸入不限於空白鍵
 	call ReadKey	;按的鍵好像會存到al中
     cmp al, 20h     ;用 ASCII 空格字符的碼檢查是否為非空白字符
@@ -201,9 +265,9 @@ END_PLAY:
 	INVOKE SetConsoleCursorPosition,  
 		outHandle, 
 		startPos
-	mWrite "Press space to play again"
+	mWrite "Press ""r"" to play again or others to leave"
 	call Readchar
-	.IF ax == 3920h ;要改成R之類的按鍵
+	.IF ax == 1372h || ax == 1352h;要改成R之類的按鍵
 		call Clrscr
 		mov obsPos.X, 110
 		jmp Start_again
@@ -285,7 +349,7 @@ getScore PROC,
 	mov edx, 0h			
 	mov ecx, 03E8h
 	div ecx
-	call WriteDec ; display it ;因為希望跳過障礙物加分，先用temp代替
+	call WriteDec ; display it
 	mov score, eax
 	;15秒增加速度，到330秒極限
 	mov edx, 0h
@@ -303,10 +367,64 @@ quit:
 getScore ENDP
 
 startScreen PROC
+	add rolePos.X, 17
+	add rolePos.Y, 3
+	; Set the role to (28, 19):
+	FORC num, <123456789>
+		INVOKE WriteConsoleOutputAttribute, 
+			outHandle, 
+			ADDR attribute&num, 
+			10, 
+			rolePos, 
+			ADDR cellsWritten
+		INVOKE WriteConsoleOutputCharacter, 
+			outHandle, 
+			ADDR buffer, 
+			10, 
+			rolePos, 
+			ADDR cellsWritten
+		inc rolePos.Y
+	ENDM
+
+	;畫出"Running"
+	FORC num, <IJKLMNOP>
+		INVOKE WriteConsoleOutputAttribute, 
+			outHandle, 
+			ADDR attribute&num, 
+			75, 
+			startPos, 
+			ADDR cellsWritten
+		INVOKE WriteConsoleOutputCharacter, 
+			outHandle, 
+			ADDR buffer, 
+			75, 
+			startPos, 
+			ADDR cellsWritten
+		inc startPos.Y
+	ENDM
+	add startPos.Y, 3
+	;畫出"HOURSE"
+	FORC num, <QRTUV>
+		INVOKE WriteConsoleOutputAttribute, 
+			outHandle, 
+			ADDR attribute&num, 
+			101, 
+			startPos, 
+			ADDR cellsWritten
+		INVOKE WriteConsoleOutputCharacter, 
+			outHandle, 
+			ADDR buffer, 
+			101, 
+			startPos, 
+			ADDR cellsWritten
+		inc startPos.Y
+	ENDM
+	add startPos.Y, 4
+	add startPos.X, 50
 	INVOKE SetConsoleCursorPosition, 
 		outHandle, 
 		startPos
-	mWrite "Press space to start"
+	mWrite "Press ""space"" to start"
 notSpace:
 	call Readchar
 	.IF ax == 3920h
@@ -321,7 +439,7 @@ startScreen ENDP
 role_move1 PROC
 ;切換馬腳的兩種動作的第一種
 ;erase old position
-	FORC num, <ABCDEFGHI>
+	FORC num, <123456789>
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
 			ADDR attribute_black, 
@@ -340,7 +458,7 @@ role_move1 PROC
 	;draw a new one
 	sub rolePos.Y, 9
 
-	FORC num, <ABCDJKLMN>
+	FORC num, <1234DEFGH>
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
 			ADDR attribute&num, 
@@ -363,7 +481,7 @@ role_move1 ENDP
 role_move2 PROC
 ;切換馬腳的兩種動作的第二種
 ;erase old position
-	FORC num, <ABCDEFGHI>
+	FORC num, <123456789>
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
 			ADDR attribute_black, 
@@ -382,7 +500,7 @@ role_move2 PROC
 	;draw a new one
 	sub rolePos.Y, 9
 
-	FORC num, <ABCDEFGHI>
+	FORC num, <123456789>
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
 			ADDR attribute&num, 
@@ -405,7 +523,7 @@ role_move2 ENDP
 role_up PROC
 ;向上7格
 	;erase old position
-	FORC num, <ABCDEFGHI>
+	FORC num, <123456789>
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
 			ADDR attribute_black, 
@@ -422,9 +540,10 @@ role_up PROC
 	ENDM
 
 	;draw a new one
-	sub rolePos.Y, 16
+	sub rolePos.Y, 15
+	dec rolePos.Y
 
-	FORC num, <ABCDEFGHI>
+	FORC num, <123456789>
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
 			ADDR attribute&num, 
@@ -447,7 +566,7 @@ role_up ENDP
 role_down PROC
 ;向下一格
 	;erase old position
-	FORC num, <ABCDEFGHI>
+	FORC num, <123456789>
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
 			ADDR attribute_black, 
@@ -467,7 +586,7 @@ role_down PROC
 	sub rolePos.Y, 9
 	inc rolePos.Y
 
-	FORC num, <ABCDEFGHI>
+	FORC num, <123456789>
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
 			ADDR attribute&num, 
@@ -543,8 +662,8 @@ move_obstacle PROC
 			obsPos, 
 			ADDR cellsWritten
 		dec obsPos.Y
-		ENDM
-		;生成隨機顏色
+	ENDM
+	;生成隨機顏色
 		call Randomize ;初始化
 		call Random32 ;生成隨機正整數到eax
 		xor edx, edx ;餘數歸零
