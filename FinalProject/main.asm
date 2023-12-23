@@ -1,7 +1,9 @@
 INCLUDE Irvine32.inc
 INCLUDE macros.inc
 
-fileAct PROTO
+fileOpen PROTO
+fileWrite PROTO
+fileRaed PROTO
 getScore PROTO
 startScreen PROTO
 role_move1 PROTO
@@ -33,6 +35,7 @@ curInfo CONSOLE_CURSOR_INFO <1, FALSE>
 range DWORD 8
 
 ;file
+HighestScore DWORD ? 
 testMsg BYTE "This is test message."
 testSize DWORD ($-testMsg)
 line BYTE ?
@@ -141,7 +144,9 @@ main PROC
 		ADDR curInfo
 	;開始畫面
 	call startScreen
-	
+
+	call fileOpen;
+
 	;角色位置重置
 	mov rolePos.X, 11
 	mov rolePos.Y, 16
@@ -265,25 +270,31 @@ END_PLAY:
 	INVOKE SetConsoleCursorPosition,  
 		outHandle, 
 		startPos
-	mWrite "Press ""r"" to play again or others to leave"
+	mWrite "Press ""r"" to play again or ""Esc"" to leave"
+	call fileWrite	;測試寫檔
+	call fileRead	;測試讀檔
+Readchar_again:
 	call Readchar
-	.IF ax == 1372h || ax == 1352h;要改成R之類的按鍵
+	.IF ax == 1372h || ax == 1352h;按r再玩一次
 		call Clrscr
 		mov obsPos.X, 110
 		jmp Start_again
 	.ENDIF
-
-	call Crlf
-	;call fileAct	;測試寫檔讀檔
+	.IF ax == 011bh;按esc離開遊戲
+		jmp EndMain
+	.ENDIF
+	jmp Readchar_again
+	
 EndMain:
 	
 	exit
 main ENDP
 
-fileAct PROC
+fileOpen PROC
+	;開寫檔，每次開會把之前的紀錄刪掉
 	INVOKE CreateFile,
 		ADDR filename, 
-		GENERIC_WRITE, 
+		GENERIC_WRITE OR GENERIC_READ, 
 		DO_NOT_SHARE, 
 		NULL,
 		OPEN_EXISTING, 
@@ -295,45 +306,37 @@ fileAct PROC
 		call WriteString
 		jmp QuitNow
 	.ENDIF
+	ret
+QuitNow:
+	exit
+fileOpen ENDP
+
+fileWrite PROC
+	;寫檔
 	INVOKE WriteFile, ; write text to file
 		fileHandle, ; file handle
-		ADDR testMsg, ; buffer pointer
-		testSize, ; number of bytes to write
+		ADDR score, ; buffer pointer
+		scoreSize, ; number of bytes to write
 		ADDR bytesWritten, ; number of bytes written
 		0 ; overlapped execution flag
-	INVOKE CloseHandle, fileHandle
+	ret
+fileWrite ENDP
 
-	INVOKE CreateFile,
-		ADDR filename, 
-		GENERIC_READ, 
-		DO_NOT_SHARE, 
-		NULL,
-		OPEN_EXISTING, 
-		FILE_ATTRIBUTE_NORMAL, 
-		0
-	mov fileHandle,eax ; save file handle
-	.IF eax == INVALID_HANDLE_VALUE
-		mov edx,OFFSET errMsg ; Display error message
-		call WriteString
-		jmp QuitNow
-	.ENDIF
-
+fileRead PROC
+	;指向文件開頭
 	INVOKE SetFilePointer,
 		fileHandle,0,0,FILE_BEGIN
-
 	INVOKE ReadFile,
 		fileHandle,		; handle to file
-		ADDR line,			; ptr to buffer
-		testSize,		; num bytes to read
+		ADDR HighestScore,			; ptr to buffer
+		10,		; num bytes to read
 		ADDR bytesRead,		; bytes actually read
 		NULL			; NULL (0) for syn mode
 
-	mov  edx,OFFSET line
-    call WriteString
-	INVOKE CloseHandle, fileHandle
-QuitNow:
+	mov  eax, HighestScore
+    call WriteDec
 	ret
-fileAct ENDP
+fileRead ENDP
 
 getScore PROC, 
 	;用經過的milliseconds當作分數
