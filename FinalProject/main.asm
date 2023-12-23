@@ -27,7 +27,7 @@ attributes WORD 0Eh, 0h, Ground DUP(22h), 11h		;colors
 titleStr BYTE "小馬快快跑",0
 drawDelay DWORD 150	;to draw obstacle with a delay
 startTime DWORD ?   ;
-curPos COORD <104,1>
+curPos COORD <90,1>
 role_up_Y = 16		;用於判斷有沒有跳起來
 score DWORD ?
 scoreSize DWORD ($-score)
@@ -35,7 +35,8 @@ curInfo CONSOLE_CURSOR_INFO <1, FALSE>
 range DWORD 8
 
 ;file
-HighestScore DWORD ? 
+CurrentScore DWORD ? 
+HighestScore DWORD 0
 testMsg BYTE "This is test message."
 testSize DWORD ($-testMsg)
 line BYTE ?
@@ -145,12 +146,24 @@ main PROC
 	;開始畫面
 	call startScreen
 
-	call fileOpen;
+	call fileOpen 
+
+Start_again:
+	;讀取最高分數並印出"Highest: HighestScore" 
+	mov curPos.X, 90
+	INVOKE SetConsoleCursorPosition, 
+			outHandle, 
+			curPos
+	call fileRead
+	mWrite "Highest: "
+	mov eax, HighestScore
+	call WriteDec
+	add curPos.X,14
 
 	;角色位置重置
 	mov rolePos.X, 11
 	mov rolePos.Y, 16
-Start_again:
+
 	; Set the role to (11,16):
 	FORC num, <123456789>
 		INVOKE WriteConsoleOutputAttribute, 
@@ -203,7 +216,6 @@ Start_again:
 
 	
 
-;要先判斷有沒有輸入	
 	
 ;Start moving	
 PLAY:
@@ -264,15 +276,30 @@ END_PLAY:
 	mWrite "Your score is "
 	mov eax, score
 	call WriteDec
+	call fileRead	;讀最高值
+	;如果這次比較高，就寫進檔案裡
+	mov  eax, score
+	.IF eax > HighestScore
+		mov HighestScore, eax
+		call fileWrite
+		INVOKE Sleep, 1000
+		inc startPos.Y
+		INVOKE SetConsoleCursorPosition,  
+			outHandle, 
+			startPos
+		
+		mWrite "New record! Congratualation!"
+		
+		
+	.ENDIF
+
 	INVOKE Sleep, 1000
-	;retry
 	inc startPos.Y
 	INVOKE SetConsoleCursorPosition,  
 		outHandle, 
 		startPos
-	mWrite "Press ""r"" to play again or ""Esc"" to leave"
-	call fileWrite	;測試寫檔
-	call fileRead	;測試讀檔
+	mWrite "Press ""r"" to play again or ""Esc"" to leave"	
+	
 Readchar_again:
 	call Readchar
 	.IF ax == 1372h || ax == 1352h;按r再玩一次
@@ -291,7 +318,7 @@ EndMain:
 main ENDP
 
 fileOpen PROC
-	;開寫檔，每次開會把之前的紀錄刪掉
+	;開寫檔，每次開會指向最前面
 	INVOKE CreateFile,
 		ADDR filename, 
 		GENERIC_WRITE OR GENERIC_READ, 
@@ -312,10 +339,13 @@ QuitNow:
 fileOpen ENDP
 
 fileWrite PROC
+	;指向文件開頭
+	INVOKE SetFilePointer,
+		fileHandle,0,0,FILE_BEGIN
 	;寫檔
 	INVOKE WriteFile, ; write text to file
 		fileHandle, ; file handle
-		ADDR score, ; buffer pointer
+		ADDR Highestscore, ; buffer pointer
 		scoreSize, ; number of bytes to write
 		ADDR bytesWritten, ; number of bytes written
 		0 ; overlapped execution flag
@@ -329,12 +359,10 @@ fileRead PROC
 	INVOKE ReadFile,
 		fileHandle,		; handle to file
 		ADDR HighestScore,			; ptr to buffer
-		10,		; num bytes to read
+		scoreSize,		; num bytes to read
 		ADDR bytesRead,		; bytes actually read
-		NULL			; NULL (0) for syn mode
-
-	mov  eax, HighestScore
-    call WriteDec
+		NULL			; NULL (0) for syn mode	
+	
 	ret
 fileRead ENDP
 
@@ -588,7 +616,6 @@ role_down PROC
 	;draw a new one
 	sub rolePos.Y, 9
 	inc rolePos.Y
-
 	FORC num, <123456789>
 		INVOKE WriteConsoleOutputAttribute, 
 			outHandle, 
