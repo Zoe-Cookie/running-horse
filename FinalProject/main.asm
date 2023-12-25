@@ -11,6 +11,8 @@ role_move2 PROTO
 role_up PROTO		
 role_down PROTO
 move_obstacle PROTO
+move_obstacle2 PROTO
+move_obstacle3 PROTO
 
 
 .data
@@ -20,6 +22,9 @@ cellsWritten DWORD ?
 rolePos COORD <11,16>   ;initialize position of role
 groundPos COORD <11,25> ;initialize position of ground
 obsPos COORD <110,24>	;initialize position of obstacle
+obsPos2 COORD <110,24>
+obsPos3 COORD <110,24>
+obsCount DWORD 0
 obsBound COORD <11,24>
 startPos COORD <0,2>	;封面的字
 buffer BYTE Ground DUP(44h)							;character types
@@ -33,6 +38,7 @@ score DWORD ?
 scoreSize DWORD ($-score)
 curInfo CONSOLE_CURSOR_INFO <1, FALSE>
 range DWORD 8
+range2 DWORD 3
 
 ;file
 CurrentScore DWORD ? 
@@ -248,7 +254,45 @@ spaceNotPressed:
 		call role_move2
 	.ENDIF
 
+	xor edx, edx
+	mov eax, score
+	mov ebx, 7
+	div ebx
+	.IF edx == 0
+		call Randomize ;初始化
+		call Random32 ;生成隨機正整數到eax
+		xor edx, edx ;餘數歸零
+		div range2 ;0到2隨機數
+		mov obsCount, edx
+	.ENDIF
+	
 	call move_obstacle
+	.IF obsCount == 1
+		.IF obsPos.X == 74
+			.IF obsPos2.X == 110
+				call move_obstacle2
+			.ENDIF
+		.ENDIF
+	.ENDIF
+	.IF obsPos2.X != 110
+		call move_obstacle2
+	.ENDIF
+	.IF obsCount == 2
+		.IF obsPos.X == 74
+			.IF obsPos2.X == 110
+				call move_obstacle2
+			.ENDIF
+		.ENDIF
+		.IF obsPos2.X == 74
+			.IF obsPos3.X == 110
+				call move_obstacle3
+			.ENDIF
+		.ENDIF
+	.ENDIF
+	.IF obsPos3.X != 110
+		call move_obstacle3
+	.ENDIF
+
 
 	mov ax,rolePos.X
 	add ax, 5
@@ -257,6 +301,15 @@ spaceNotPressed:
 		jmp END_PLAY
 		
 	.ENDIF
+	.IF obsPos2.X <= ax && rolePos.Y >= 13
+		jmp END_PLAY
+		
+	.ENDIF
+	.IF obsPos3.X <= ax && rolePos.Y >= 13
+		jmp END_PLAY
+		
+	.ENDIF
+
 	jmp PLAY
 END_PLAY:
 	mov  eax,500 ;delay 1 sec
@@ -299,7 +352,10 @@ END_PLAY:
 		outHandle, 
 		startPos
 	mWrite "Press ""r"" to play again or ""Esc"" to leave"	
-	
+	mov obsPos.X, 110 ;障礙物位置重置
+	mov obsPos2.X, 110 
+	mov obsPos3.X, 110 
+
 Readchar_again:
 	call Readchar
 	.IF ax == 1372h || ax == 1352h;按r再玩一次
@@ -707,4 +763,148 @@ move_obstacle PROC
 	.ENDIF
 	ret
 move_obstacle ENDP
+
+move_obstacle2 PROC
+	;draw obstacle with color red
+	FORC num, <ABC>
+		INVOKE WriteConsoleOutputAttribute, 
+			outHandle, 
+			ADDR attribute, 
+			3, 
+			obsPos2, 
+			ADDR cellsWritten
+		INVOKE WriteConsoleOutputCharacter, 
+			outHandle, 
+			ADDR buffer, 
+			3, 
+			obsPos2, 
+			ADDR cellsWritten
+		dec obsPos2.Y			;每次畫一列，往上畫
+	ENDM
+	;back to previous position Y回到第一列，X倒退三行
+	add obsPos2.X, 3
+	add obsPos2.Y, 3
+	;erase obstacle 
+	FORC num, <ABC>
+		INVOKE WriteConsoleOutputAttribute, 
+			outHandle, 
+			ADDR attribute_black, 
+			3, 
+			obsPos2, 
+			ADDR cellsWritten
+		INVOKE WriteConsoleOutputCharacter, 
+			outHandle, 
+			ADDR buffer, 
+			3, 
+			obsPos2, 
+			ADDR cellsWritten
+		dec obsPos2.Y
+	ENDM
+	;to the next position Y回到第一列，X前進六行
+	sub obsPos2.X, 6
+	add obsPos2.Y, 3
+	;若障礙物到達末端，從頭開始
+	.IF obsPos2.X == 5
+		add obsPos2.X, 3
+		FORC num, <ABC>
+		INVOKE WriteConsoleOutputAttribute, 
+			outHandle, 
+			ADDR attribute_black, 
+			3, 
+			obsPos2, 
+			ADDR cellsWritten
+		INVOKE WriteConsoleOutputCharacter, 
+			outHandle, 
+			ADDR buffer, 
+			3, 
+			obsPos2, 
+			ADDR cellsWritten
+		dec obsPos2.Y
+	ENDM
+	;生成隨機顏色
+		call Randomize ;初始化
+		call Random32 ;生成隨機正整數到eax
+		xor edx, edx ;餘數歸零
+		div range ;0到7隨機數
+		mov ax, attribute0[edx*2] ; 根據隨機數選擇對應的顏色
+		FORC num, <024>
+			mov attribute[&num], ax ; 設定顏色
+		ENDM
+	mov obsPos2.X, 110 
+	add obsPos2.Y, 3
+	.ENDIF
+	ret
+move_obstacle2 ENDP
+
+move_obstacle3 PROC
+	;draw obstacle with color red
+	FORC num, <ABC>
+		INVOKE WriteConsoleOutputAttribute, 
+			outHandle, 
+			ADDR attribute, 
+			3, 
+			obsPos3, 
+			ADDR cellsWritten
+		INVOKE WriteConsoleOutputCharacter, 
+			outHandle, 
+			ADDR buffer, 
+			3, 
+			obsPos3, 
+			ADDR cellsWritten
+		dec obsPos3.Y			;每次畫一列，往上畫
+	ENDM
+	;back to previous position Y回到第一列，X倒退三行
+	add obsPos3.X, 3
+	add obsPos3.Y, 3
+	;erase obstacle 
+	FORC num, <ABC>
+		INVOKE WriteConsoleOutputAttribute, 
+			outHandle, 
+			ADDR attribute_black, 
+			3, 
+			obsPos3, 
+			ADDR cellsWritten
+		INVOKE WriteConsoleOutputCharacter, 
+			outHandle, 
+			ADDR buffer, 
+			3, 
+			obsPos3, 
+			ADDR cellsWritten
+		dec obsPos3.Y
+	ENDM
+	;to the next position Y回到第一列，X前進六行
+	sub obsPos3.X, 6
+	add obsPos3.Y, 3
+	;若障礙物到達末端，從頭開始
+	.IF obsPos3.X == 5
+		add obsPos3.X, 3
+		FORC num, <ABC>
+		INVOKE WriteConsoleOutputAttribute, 
+			outHandle, 
+			ADDR attribute_black, 
+			3, 
+			obsPos3, 
+			ADDR cellsWritten
+		INVOKE WriteConsoleOutputCharacter, 
+			outHandle, 
+			ADDR buffer, 
+			3, 
+			obsPos3, 
+			ADDR cellsWritten
+		dec obsPos3.Y
+	ENDM
+	;生成隨機顏色
+		call Randomize ;初始化
+		call Random32 ;生成隨機正整數到eax
+		xor edx, edx ;餘數歸零
+		div range ;0到7隨機數
+		mov ax, attribute0[edx*2] ; 根據隨機數選擇對應的顏色
+		FORC num, <024>
+			mov attribute[&num], ax ; 設定顏色
+		ENDM
+	mov obsPos3.X, 110 
+	add obsPos3.Y, 3
+	.ENDIF
+	ret
+move_obstacle3 ENDP
 END main
